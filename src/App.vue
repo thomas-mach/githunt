@@ -7,7 +7,10 @@
 <script>
   export default {
     
+  mounted() {
+    const githubToken = this.$githubToken;
   }
+}
 </script>
 
 <style scoped>
