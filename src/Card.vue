@@ -1,22 +1,145 @@
 <template>
+  <div v-for="el in repositories" :key="el.id">
     <div class="card">
-        <div class="main"></div>
-        <div class="footer">
-
+      <div class="header">
+        <div class="avatar-container">
+          <img :src="el.avatar_url" alt="" class="avatar" />
         </div>
+      </div>
+      <div class="main">
+        <p class="name">{{ el.name }}</p>
+        <div class="description-box">
+          <p class="description">{{ el.description }}</p>
+        </div>
+        <div class="box">
+          <div class="stars">
+            <font-awesome-icon :icon="['fas', 'star']" />
+            <p>{{ el.stargazers_count }}</p>
+          </div>
+          <div class="issues">
+            <font-awesome-icon :icon="['fas', 'circle-exclamation']" />
+            <p>{{ el.open_issues_count }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <a class="button" :href="el.html_url" target="_blank"
+          >Go to repo
+          <font-awesome-icon :icon="['fas', 'arrow-up-right-from-square']"
+        /></a>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        
-    }
+export default {
+  props: {
+    repositories: Array,
+  },
+};
 </script>
 
 <style scoped>
-    .card{
-        width: 200px;
-        height: 350px;
-        border: 1px solid black;
-    }
+.card {
+  color: rgb(83, 83, 83);
+  background-color: rgb(243, 243, 243);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  width: 235px;
+  height: 400px;
+  border-radius: 20px;
+
+  /* border: 1px solid lightgray; */
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 10px;
+  flex-grow: 1;
+}
+
+.footer {
+  color: rgb(83, 83, 83);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  border-top: 2px solid white;
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.avatar-container {
+  background: linear-gradient(to right, #007bff, #75b8ff);
+  display: flex;
+  justify-content: center;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 15px;
+}
+
+.name {
+  font-size: 16px;
+  font-weight: 700;
+  word-wrap: break-word; /* Permette al testo di andare a capo se necessario */
+  overflow-wrap: break-word; /* Aggiunto per maggiore compatibilità */
+}
+
+.description {
+  display: -webkit-box; /* Necessario per -webkit-line-clamp */
+  -webkit-box-orient: vertical; /* Imposta l'orientamento verticale */
+  -webkit-line-clamp: 3; /* Limita a 2 righe */
+  overflow: hidden; /* Nasconde il testo in eccesso */
+  text-overflow: ellipsis; /* Aggiunge i puntini di sospensione */
+  font-size: 14px;
+  font-weight: 100;
+  line-height: 1.4; /* Altezza della riga */
+  max-height: 4.2em; /* Limita l'altezza massima per 2 righe */
+}
+
+.description-box {
+  flex-grow: 2;
+}
+
+.stars {
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.issues {
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  display: flex;
+  gap: 12px;
+}
+
+.button {
+  color: rgb(83, 83, 83);
+  font-weight: 500;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none; /* Rimuove la sottolineatura */
+  border-radius: 5px; /* Aggiunge angoli arrotondati */
+  font-size: 16px; /* Dimensione del testo */
+  cursor: pointer; /* Cambia il puntatore a mano */
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 </style>

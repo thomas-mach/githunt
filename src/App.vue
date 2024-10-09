@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app">
     <Header class="header" />
     <Main class="main" />
     <Footer class="footer" />
@@ -17,10 +17,6 @@ export default {
     Main,
     Footer,
   },
-
-  mounted() {
-    const githubToken = this.$githubToken;
-  },
 };
 </script>
 
@@ -31,7 +27,8 @@ export default {
   margin-top: 10px;
 }
 
-.header {
-  margin-bottom: 30px;
+.app {
+  display: flex;
+  flex-direction: column;
 }
 </style>

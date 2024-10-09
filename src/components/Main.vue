@@ -1,13 +1,8 @@
 <template>
   <div class="container">
-    <div class="row">
-      <div class="col">
-        <SearchBar @send-data-to-parent="reciveData" />
-        <!-- <Card /> -->
-        <div v-for="el in data">
-          <p>{{ el.name }}</p>
-        </div>
-      </div>
+    <SearchBar @send-data-to-parent="reciveData" />
+    <div class="container-grid">
+      <Card :repositories="repositories" />
     </div>
   </div>
 </template>
@@ -24,7 +19,7 @@ export default {
   data() {
     return {
       errorMessage: "",
-      data: [],
+      repositories: [],
       username: "thomas-mach",
       selectedOption: "",
     };
@@ -41,14 +36,24 @@ export default {
     async fetch() {
       this.errorMessage = "";
       try {
-        let url = `https://api.github.com/search/${this.selectedOption}?q=language:PHP&sort=updated&order=desc&per_page=100&page=1`;
+        let url = `https://api.github.com/search/${this.selectedOption}?q=language:PHP&sort=updated&order=desc&per_page=10&page=1`;
         const token = this.$githubToken;
         const response = await axios.get(url, {
           headers: {
             Authorization: `token ${token}`,
           },
         });
-        this.data = response.data.items;
+
+        this.repositories = response.data.items.map((item) => ({
+          id: item.id,
+          avatar_url: item.owner.avatar_url,
+          name: item.full_name,
+          description: item.description,
+          stargazers_count: item.stargazers_count,
+          open_issues_count: item.open_issues_count,
+          html_url: item.html_url,
+        }));
+        console.log("repositories", this.repositories);
       } catch (error) {
         this.errorMessage = "Failed to fetch. Please try again later.";
         console.log(error);
@@ -60,10 +65,11 @@ export default {
 </script>
 
 <style scoped>
-.col {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 30px;
+.container-grid {
+  margin-top: 50px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px; /* Spazio tra righe e colonne */
+  justify-items: center; /* Centra gli elementi nel contenitore */
 }
 </style>
