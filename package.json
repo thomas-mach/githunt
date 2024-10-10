@@ -17,8 +17,10 @@
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/vue-fontawesome": "^3.0.8",
     "axios": "^1.7.7",
+    "sweetalert2": "^11.14.2",
     "typeface-cutive-mono": "^1.1.13",
-    "vue": "^3.5.10"
+    "vue": "^3.5.10",
+    "vue-sweetalert2": "^5.0.11"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.4",

@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import "./style.css";
 import App from "./App.vue";
+import Swal from "sweetalert2";
 import "@fontsource/comfortaa";
 import "@fontsource/roboto-mono/100.css";
 import "@fontsource/roboto-mono/400.css"; // Regular 400
@@ -18,7 +19,6 @@ import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 library.add(faStar, faCircleExclamation, faArrowUpRightFromSquare);
 const app = createApp(App);
 
-// Definisci il token come proprietà globale
 app.component("font-awesome-icon", FontAwesomeIcon);
 app.config.globalProperties.$githubToken = import.meta.env.VITE_GITHUB_TOKEN;
 

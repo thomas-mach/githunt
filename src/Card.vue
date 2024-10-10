@@ -1,8 +1,11 @@
 <template>
   <div v-for="el in repositories" :key="el.id">
-    <div class="card">
+    <div class="card" :class="{ 'card-user': typeOfCard === 'users' }">
       <div class="header">
-        <div class="avatar-container">
+        <div
+          class="avatar-container"
+          :class="{ 'avatar-container-user': typeOfCard === 'users' }"
+        >
           <img :src="el.avatar_url" alt="" class="avatar" />
         </div>
       </div>
@@ -11,7 +14,7 @@
         <div class="description-box">
           <p class="description">{{ el.description }}</p>
         </div>
-        <div class="box">
+        <div v-if="typeOfCard === 'repositories'" class="box">
           <div class="stars">
             <font-awesome-icon :icon="['fas', 'star']" />
             <p>{{ el.stargazers_count }}</p>
@@ -24,7 +27,7 @@
       </div>
       <div class="footer">
         <a class="button" :href="el.html_url" target="_blank"
-          >Go to repo
+          >{{ linkText }}
           <font-awesome-icon :icon="['fas', 'arrow-up-right-from-square']"
         /></a>
       </div>
@@ -36,6 +39,8 @@
 export default {
   props: {
     repositories: Array,
+    typeOfCard: String,
+    linkText: String,
   },
 };
 </script>
@@ -51,8 +56,10 @@ export default {
   width: 235px;
   height: 400px;
   border-radius: 20px;
+}
 
-  /* border: 1px solid lightgray; */
+.card-user {
+  height: 280px;
 }
 
 .main {
@@ -85,6 +92,10 @@ export default {
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   padding: 15px;
+}
+
+.avatar-container-user {
+  background: linear-gradient(to right, #00ff7b, #75ffb8);
 }
 
 .name {
