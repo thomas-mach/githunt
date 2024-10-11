@@ -15,6 +15,10 @@
           <option value="repositories">Repositories</option>
           <option value="users">Users</option>
         </select>
+        <!-- <select id="pages" v-model="selectedOption">
+          <option value="10">10</option>
+          <option value="20">20</option>
+        </select> -->
         <button @click="sendDataToParent" id="search-button">Submit</button>
       </div>
     </div>
@@ -58,6 +62,7 @@ export default {
 <style scoped>
 .row {
   justify-content: center;
+  width: 100%;
 }
 
 .search {

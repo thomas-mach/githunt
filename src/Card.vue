@@ -102,17 +102,17 @@ export default {
   font-size: 16px;
   font-weight: 700;
   word-wrap: break-word; /* Permette al testo di andare a capo se necessario */
-  overflow-wrap: break-word; /* Aggiunto per maggiore compatibilità */
+  overflow-wrap: break-word;
 }
 
 .description {
   display: -webkit-box; /* Necessario per -webkit-line-clamp */
   -webkit-box-orient: vertical; /* Imposta l'orientamento verticale */
-  -webkit-line-clamp: 3; /* Limita a 2 righe */
-  overflow: hidden; /* Nasconde il testo in eccesso */
+  -webkit-line-clamp: 3; /* Limita a 3 righe */
+  overflow: hidden;
   text-overflow: ellipsis; /* Aggiunge i puntini di sospensione */
   font-size: 14px;
-  font-weight: 100;
+  font-weight: 400;
   line-height: 1.4; /* Altezza della riga */
   max-height: 4.2em; /* Limita l'altezza massima per 2 righe */
 }
