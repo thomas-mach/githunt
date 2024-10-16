@@ -1,24 +1,5 @@
 <template>
   <div class="container">
-    <div class="search-bar-box">
-      <span v-show="repositories.length" class="page-count-info"
-        >Page {{ page }} of {{ totalPages }}</span
-      >
-      <div class="wrapper">
-        <SearchBar @send-data-to-parent="reciveData" />
-        <div class="box-loader">
-          <div v-show="isLoading" class="loader"></div>
-        </div>
-      </div>
-      <font-awesome-icon :icon="['fab', 'github']" />
-    </div>
-    <div class="container-grid">
-      <Card
-        :repositories="repositories"
-        :linkText="linkText"
-        :typeOfCard="selectedOption"
-      />
-    </div>
     <div class="container">
       <div v-show="pageNumbers.length > 1" class="row">
         <button @click="prevPage" :disabled="!hasPrev">
@@ -38,6 +19,24 @@
         </button>
       </div>
     </div>
+    <div class="search-bar-box">
+      <span v-show="repositories.length" class="page-count-info"
+        >Page {{ page }} of {{ totalPages }}</span
+      >
+      <div class="wrapper">
+        <SearchBar @send-data-to-parent="reciveData" />
+        <div class="box-loader">
+          <div v-show="isLoading" class="loader"></div>
+        </div>
+      </div>
+    </div>
+    <div class="container-grid">
+      <Card
+        :repositories="repositories"
+        :linkText="linkText"
+        :typeOfCard="selectedOption"
+      />
+    </div>
   </div>
 </template>
 
@@ -54,45 +53,70 @@ export default {
   data() {
     return {
       repositories: [],
+      pageNumbers: [],
       selectedOption: "",
       searchValue: "",
       linkText: "",
-      isLoading: false,
       page: 1,
-      hasNext: false,
-      hasPrev: false,
       totalPages: 1,
-      pageNumbers: [],
+      isLoading: false,
+      totalResaults: null,
+      itemsForPageValue: null,
+      // hasNext: false,
+      // hasPrev: false,
     };
   },
 
   methods: {
-    reciveData(option, search) {
-      this.page = 1;
+    reciveData(option, search, items) {
+      // this.page = 1;
       this.searchValue = search;
       this.selectedOption = option;
+      this.itemsForPageValue = items;
+
       this.selectedOption === "repositories"
         ? (this.linkText = "Go to repo")
         : (this.linkText = "Go to profile");
+
       this.fetch();
-      console.log(option, search);
+
+      console.log(option, search, items);
     },
 
     async fetch() {
-      this.isLoading = true;
+      console.log("PAGE", this.page);
+
+      let pageToFetch =
+        Math.floor(((this.page - 1) * this.itemsForPageValue) / 100) + 1; // Calculate which block of 100 results to fetch
+      pageToFetch > 10 ? (pageToFetch = 10) : pageToFetch;
+
+      // Controlla se c'è cache disponibile
+      const cachedData = this.checkCache(pageToFetch);
+      if (cachedData) {
+        console.log("Using cached data");
+        this.repositories = cachedData;
+        this.applyPagination(); // Applica la paginazione direttamente
+        return; // Esci senza fare la richiesta API
+      }
+
+      // Se non c'è cache, procedi con la richiesta API
+      this.isLoading = true; // Solo qui impostiamo isLoading su true
       this.errorMessage = "";
-      const url = `https://api.github.com/search/${this.selectedOption}?q=${this.searchValue}&sort=updated&order=desc&per_page=10&page=${this.page}`;
+
+      const url = `https://api.github.com/search/${this.selectedOption}?q=${this.searchValue}&sort=updated&order=desc&per_page=100&page=${pageToFetch}`;
+
       try {
+        console.log("try caled");
         const token = this.$githubToken;
         const response = await axios.get(url, {
           headers: {
             Authorization: `token ${token}`,
           },
         });
-        this.checkPagination(response.headers.link);
-        this.totalPages = Math.ceil(response.data.total_count / 10);
-        this.updatePageNumners();
+
+        this.totalResaults = response.data.total_count;
         this.checksIfResault(response.data.items);
+
         this.repositories = response.data.items.map((item) => ({
           id: item.id,
           avatar_url:
@@ -119,42 +143,73 @@ export default {
           language:
             this.selectedOption === "repositories" ? item.language : null,
         }));
-        console.log("repositories", this.repositories);
-        console.log("Toto Pages", this.totPages);
+
+        const cacheKey = `${this.selectedOption}_${this.searchValue}_page_${pageToFetch}`;
+        sessionStorage.setItem(cacheKey, JSON.stringify(this.repositories));
+        this.applyPagination();
       } catch (error) {
         this.showAlert(error.message, error.code);
-        console.log(error);
-        console.error("Error fetching:", error);
       } finally {
-        this.isLoading = false;
+        this.isLoading = false; // Imposta isLoading su false solo dopo la richiesta API
       }
     },
 
-    checkPagination(linkHeader) {
-      console.log(linkHeader);
-      if (!linkHeader) {
-        this.hasPrev = false;
-        this.hasPrev = false;
-        return;
+    checkCache(pageToFetch) {
+      console.log(
+        `Checking cache for: ${this.selectedOption}_${this.searchValue}_page_${pageToFetch}`
+      );
+
+      const cacheKey = `${this.selectedOption}_${this.searchValue}_page_${pageToFetch}`;
+      console.log("Generated Cache Key: ", cacheKey);
+      console.log("SessionStorage:", sessionStorage);
+
+      const cachedData = sessionStorage.getItem(cacheKey);
+      if (cachedData) {
+        console.log("Using cached data");
+        return (this.repositories = JSON.parse(cachedData));
       }
-
-      const parts = linkHeader.split(",");
-      const links = {};
-      console.log("parts", parts);
-
-      parts.forEach((part) => {
-        const section = part.split(";");
-        const url = section[0].replace(/<(.*)>/, "$1").trim();
-        const name = section[1].replace(/rel="(.*)"/, "$1").trim();
-        links[name] = url;
-        console.log(section);
-        console.log(url);
-        console.log(links);
-      });
-      this.hasNext = !!links.next;
-      this.hasPrev = !!links.prev;
+      return null;
     },
 
+    applyPagination() {
+      console.log("PAGE", this.page);
+
+      // Usa il numero reale di risultati per il calcolo delle pagine
+      const totalItems = this.totalResaults > 1000 ? 1000 : this.totalResaults;
+
+      this.totalPages = Math.ceil(totalItems / this.itemsForPageValue);
+
+      console.log("Total Pages", this.totalPages);
+      console.log("Total Resaults", this.totalResaults);
+
+      let allResults = [];
+
+      const totalPagesToCheck = Math.ceil(
+        (this.page * this.itemsForPageValue) / 100
+      );
+
+      for (let i = 1; i <= totalPagesToCheck; i++) {
+        const cacheKey = `${this.selectedOption}_${this.searchValue}_page_${i}`;
+        const cachedData = sessionStorage.getItem(cacheKey);
+
+        if (cachedData) {
+          allResults = allResults.concat(JSON.parse(cachedData));
+        }
+      }
+
+      if (allResults.length < this.page * this.itemsForPageValue) {
+        this.fetch();
+      } else {
+        const start = (this.page - 1) * this.itemsForPageValue;
+        const end = start + this.itemsForPageValue;
+
+        this.repositories = allResults.slice(start, end);
+
+        this.updatePageNumbers();
+        this.hasNext = this.page < this.totalPages;
+        this.hasPrev = this.page > 1;
+      }
+    },
     checksIfResault(item) {
       if (!item.length) {
         const message = `Nothing found for "${this.searchValue}"`;
@@ -163,27 +218,36 @@ export default {
     },
 
     nextPage() {
-      if (this.hasNext) {
+      if (this.page < this.totalPages) {
         this.page++;
+        // this.checkCache();
+        this.applyPagination();
         this.fetch();
       }
     },
 
     prevPage() {
-      if (this.hasPrev) {
+      if (this.page > 0) {
         this.page--;
+        // this.checkCache();
+        this.applyPagination();
         this.fetch();
       }
     },
 
     goToPage(pageNumber) {
       this.page = pageNumber;
+      this.applyPagination();
       this.fetch();
     },
 
-    updatePageNumners() {
-      const pageRange = 20;
-      const start = Math.max(1, this.page - Math.floor(pageRange / 2));
+    updatePageNumbers() {
+      const pageRange = 10;
+      let start = Math.max(1, this.page - Math.floor(pageRange));
+      if (this.totalPages > 10) {
+        start = Math.max(1, this.page - Math.floor(pageRange / 2));
+      }
+
       const end = Math.min(this.totalPages, start + pageRange - 1);
 
       this.pageNumbers = [];
@@ -191,7 +255,7 @@ export default {
       for (let i = start; i <= end; i++) {
         this.pageNumbers.push(i);
       }
-      console.log(this.pageNumbers);
+      console.log("array con page numbers", this.pageNumbers);
     },
 
     showAlert(title, code) {
@@ -267,7 +331,7 @@ button:hover {
 
 .loader {
   height: 4px;
-  width: 372px;
+  width: 520px;
   --c: no-repeat linear-gradient(#007bff 0 0);
   background: var(--c), var(--c), #75b8ff;
   background-size: 60% 100%;

@@ -15,10 +15,13 @@
           <option value="repositories">Repositories</option>
           <option value="users">Users</option>
         </select>
-        <!-- <select id="pages" v-model="selectedOption">
-          <option value="10">10</option>
-          <option value="20">20</option>
-        </select> -->
+        <p class="label-cards-for-page">Cards/Page:</p>
+        <select id="pages" class="cards-for-page" v-model.number="itemsForPage">
+          <option :value="10">10</option>
+          <option :value="20">20</option>
+          <option :value="50">50</option>
+          <option :value="100">100</option>
+        </select>
         <button @click="sendDataToParent" id="search-button">Submit</button>
       </div>
     </div>
@@ -33,6 +36,7 @@ export default {
       search: "",
       showAlert: false,
       erroreMessage: "min 3 chars",
+      itemsForPage: 10,
     };
   },
 
@@ -40,7 +44,12 @@ export default {
     sendDataToParent() {
       if (this.validation(this.search)) {
         this.showAlert = false;
-        this.$emit("send-data-to-parent", this.selectedOption, this.search);
+        this.$emit(
+          "send-data-to-parent",
+          this.selectedOption,
+          this.search,
+          this.itemsForPage
+        );
       } else {
         this.search = "";
         this.showAlert = true;
@@ -78,6 +87,20 @@ input {
   border-bottom-left-radius: 3px;
   border-right: none;
   font-size: 14px;
+}
+
+.label-cards-for-page {
+  height: 30px;
+  padding: 3px;
+  border: 1px solid lightgray;
+  border-right: none;
+  border-left: none;
+  line-height: 23px;
+  font-size: 14px;
+}
+
+.cards-for-page {
+  border-left: none;
 }
 
 input:focus,

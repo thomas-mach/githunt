@@ -6,6 +6,7 @@
           class="avatar-container"
           :class="{ 'avatar-container-user': typeOfCard === 'users' }"
         >
+          <!-- <font-awesome-icon :icon="['fab', 'github']" /> -->
           <img :src="el.avatar_url" alt="" class="avatar" />
         </div>
       </div>
@@ -83,6 +84,7 @@ export default {
   width: 100px;
   height: 100px;
   border-radius: 50%;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5); /* Aggiunta dell'ombra */
 }
 
 .avatar-container {
@@ -99,10 +101,17 @@ export default {
 }
 
 .name {
+  /* word-wrap: break-word; /* Permette al testo di andare a capo se necessario */
+  /* overflow-wrap: break-word; */
+  display: -webkit-box; /* Necessario per -webkit-line-clamp */
+  -webkit-box-orient: vertical; /* Imposta l'orientamento verticale */
+  -webkit-line-clamp: 2; /* Limita a 3 righe */
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: 16px;
   font-weight: 700;
-  word-wrap: break-word; /* Permette al testo di andare a capo se necessario */
-  overflow-wrap: break-word;
+  line-height: 1.6; /* Altezza della riga */
+  max-height: 3.2em; /* Limita l'altezza massima per 2 righe */
 }
 
 .description {
