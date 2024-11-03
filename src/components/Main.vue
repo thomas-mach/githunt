@@ -2,7 +2,7 @@
   <div class="container">
     <div class="container">
       <div v-show="pageNumbers.length > 1" class="row">
-        <button @click="prevPage" :disabled="!hasPrev">
+        <button @click="prevPage" :disabled="page === 1">
           <font-awesome-icon :icon="['fas', 'chevron-left']" />
         </button>
         <span v-for="pageNumber in pageNumbers" key="pageNumber">
@@ -14,7 +14,7 @@
             {{ pageNumber }}
           </button></span
         >
-        <button @click="nextPage" :disabled="!hasNext">
+        <button @click="nextPage" :disabled="page === totalPages">
           <font-awesome-icon :icon="['fas', 'chevron-right']" />
         </button>
       </div>
@@ -62,33 +62,36 @@ export default {
       isLoading: false,
       totalResaults: null,
       itemsForPageValue: null,
-      // hasNext: false,
-      // hasPrev: false,
     };
   },
 
   methods: {
     reciveData(option, search, items) {
-      // this.page = 1;
-      this.searchValue = search;
+      sessionStorage.clear();
       this.selectedOption = option;
+      this.searchValue = search;
       this.itemsForPageValue = items;
+
+      this.page = 1;
+      this.totalPages = 1;
 
       this.selectedOption === "repositories"
         ? (this.linkText = "Go to repo")
         : (this.linkText = "Go to profile");
 
       this.fetch();
+      this.updatePageNumbers();
 
       console.log(option, search, items);
     },
 
     async fetch() {
-      console.log("PAGE", this.page);
+      //Effettua una richiesta API per ottenere i repository, gestisce il caching e il caricamento.
+      if (this.isLoading) return;
 
       let pageToFetch =
-        Math.floor(((this.page - 1) * this.itemsForPageValue) / 100) + 1; // Calculate which block of 100 results to fetch
-      pageToFetch > 10 ? (pageToFetch = 10) : pageToFetch;
+        Math.floor(((this.page - 1) * this.itemsForPageValue || 10) / 100) + 1;
+      pageToFetch = Math.min(pageToFetch, 10); // Non superare la pagina 10
 
       // Controlla se c'è cache disponibile
       const cachedData = this.checkCache(pageToFetch);
@@ -103,8 +106,8 @@ export default {
       this.isLoading = true; // Solo qui impostiamo isLoading su true
       this.errorMessage = "";
 
-      const url = `https://api.github.com/search/${this.selectedOption}?q=${this.searchValue}&sort=updated&order=desc&per_page=100&page=${pageToFetch}`;
-
+      const url = `https://api.github.com/search/${this.selectedOption}?q=${this.searchValue}&sort=stars&order=desc&per_page=100&page=${pageToFetch}`;
+      this.isLoading = true;
       try {
         console.log("try caled");
         const token = this.$githubToken;
@@ -155,23 +158,33 @@ export default {
     },
 
     checkCache(pageToFetch) {
+      //Controlla se i dati richiesti sono già memorizzati in sessionStorage.
       console.log(
         `Checking cache for: ${this.selectedOption}_${this.searchValue}_page_${pageToFetch}`
       );
 
       const cacheKey = `${this.selectedOption}_${this.searchValue}_page_${pageToFetch}`;
-      console.log("Generated Cache Key: ", cacheKey);
+      console.log("Page to fetch: ", pageToFetch);
       console.log("SessionStorage:", sessionStorage);
 
       const cachedData = sessionStorage.getItem(cacheKey);
       if (cachedData) {
-        console.log("Using cached data");
         return (this.repositories = JSON.parse(cachedData));
       }
       return null;
     },
 
+    checksIfResault(item) {
+      // Controlla se sono stati trovati risultati e mostra un messaggio di avviso se non ce ne sono.
+      if (!item.length) {
+        const message = `Nothing found for "${this.searchValue}"`;
+        this.showAlert(message);
+      }
+    },
+
     applyPagination() {
+      console.log("applyPagination called");
+      //Calcola le pagine totali e applica la paginazione.
       console.log("PAGE", this.page);
 
       // Usa il numero reale di risultati per il calcolo delle pagine
@@ -197,31 +210,22 @@ export default {
         }
       }
 
-      if (allResults.length < this.page * this.itemsForPageValue) {
-        this.fetch();
-      } else {
+      console.log("allResults:", allResults);
+      if (allResults.length >= this.page * this.itemsForPageValue) {
         const start = (this.page - 1) * this.itemsForPageValue;
         const end = start + this.itemsForPageValue;
-
         this.repositories = allResults.slice(start, end);
-
         this.updatePageNumbers();
-        this.hasNext = this.page < this.totalPages;
-        this.hasPrev = this.page > 1;
-      }
-    },
-    checksIfResault(item) {
-      if (!item.length) {
-        const message = `Nothing found for "${this.searchValue}"`;
-        this.showAlert(message);
+      } else {
+        // In questo caso non eseguiamo `fetch` se i dati sono in cache
+        if (!this.isLoading) this.fetch(); // Condizione per chiamare fetch solo se non è già in esecuzione
       }
     },
 
     nextPage() {
       if (this.page < this.totalPages) {
         this.page++;
-        // this.checkCache();
-        this.applyPagination();
+        console.log("nextPage");
         this.fetch();
       }
     },
@@ -229,20 +233,22 @@ export default {
     prevPage() {
       if (this.page > 0) {
         this.page--;
-        // this.checkCache();
-        this.applyPagination();
+        console.log("prevPage");
         this.fetch();
       }
     },
 
     goToPage(pageNumber) {
       this.page = pageNumber;
-      this.applyPagination();
       this.fetch();
     },
 
     updatePageNumbers() {
-      const pageRange = 10;
+      //Aggiorna la lista dei numeri di pagina visualizzati.
+
+      let pageRange = 10;
+
+      this.totalPages < 10 ? (pageRange = this.totalPages) : (pageRange = 10);
       let start = Math.max(1, this.page - Math.floor(pageRange));
       if (this.totalPages > 10) {
         start = Math.max(1, this.page - Math.floor(pageRange / 2));
