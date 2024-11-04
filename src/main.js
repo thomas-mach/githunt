@@ -16,6 +16,7 @@ import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faCodeFork } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 // Aggiungi le icone alla libreria
@@ -25,7 +26,8 @@ library.add(
   faArrowUpRightFromSquare,
   faChevronLeft,
   faChevronRight,
-  faGithub
+  faGithub,
+  faCodeFork
 );
 const app = createApp(App);
 

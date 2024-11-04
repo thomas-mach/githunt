@@ -56,6 +56,7 @@ export default {
       pageNumbers: [],
       selectedOption: "",
       searchValue: "",
+      sortValue: "",
       linkText: "",
       page: 1,
       totalPages: 1,
@@ -66,11 +67,13 @@ export default {
   },
 
   methods: {
-    reciveData(option, search, items) {
+    reciveData(option, search, items, sort) {
       sessionStorage.clear();
       this.selectedOption = option;
       this.searchValue = search;
       this.itemsForPageValue = items;
+      this.sortValue = sort;
+      console.log("sort by:", this.sortValue);
 
       this.page = 1;
       this.totalPages = 1;
@@ -106,7 +109,7 @@ export default {
       this.isLoading = true; // Solo qui impostiamo isLoading su true
       this.errorMessage = "";
 
-      const url = `https://api.github.com/search/${this.selectedOption}?q=${this.searchValue}&sort=stars&order=desc&per_page=100&page=${pageToFetch}`;
+      const url = `https://api.github.com/search/${this.selectedOption}?q=${this.searchValue}&sort=${this.sortValue}&order=desc&per_page=100&page=${pageToFetch}`;
       this.isLoading = true;
       try {
         console.log("try caled");
@@ -145,7 +148,13 @@ export default {
           html_url: item.html_url,
           language:
             this.selectedOption === "repositories" ? item.language : null,
+          forks_count:
+            this.selectedOption === "repositories" ? item.forks_count : null,
         }));
+
+        if (this.sortValue === "issues") {
+          this.sortClainetSide();
+        }
 
         const cacheKey = `${this.selectedOption}_${this.searchValue}_page_${pageToFetch}`;
         sessionStorage.setItem(cacheKey, JSON.stringify(this.repositories));
@@ -270,6 +279,12 @@ export default {
         title: title,
         text: code,
       });
+    },
+
+    sortClainetSide() {
+      this.repositories.sort(
+        (a, b) => b.open_issues_count - a.open_issues_count
+      );
     },
   },
 };

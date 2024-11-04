@@ -22,6 +22,31 @@
           <option :value="50">50</option>
           <option :value="100">100</option>
         </select>
+        <p class="label-cards-for-page">Sort By:</p>
+        <select id="sort" v-model="sortBy">
+          <option v-if="selectedOption === 'repositories'" value="stars">
+            stars
+          </option>
+          <option v-if="selectedOption === 'repositories'" value="forks">
+            forks
+          </option>
+          <option v-if="selectedOption === 'repositories'" value="updated">
+            updated
+          </option>
+          <option v-if="selectedOption === 'repositories'" value="issues">
+            issues
+          </option>
+          <option v-if="selectedOption === 'users'" value="followers">
+            followers
+          </option>
+          <option v-if="selectedOption === 'users'" value="repositories">
+            repositories
+          </option>
+          <option v-if="selectedOption === 'users'" value="joined">
+            joined
+          </option>
+        </select>
+
         <button @click="sendDataToParent" id="search-button">Submit</button>
       </div>
     </div>
@@ -37,6 +62,7 @@ export default {
       showAlert: false,
       erroreMessage: "min 3 chars",
       itemsForPage: 10,
+      sortBy: "",
     };
   },
 
@@ -48,7 +74,8 @@ export default {
           "send-data-to-parent",
           this.selectedOption,
           this.search,
-          this.itemsForPage
+          this.itemsForPage,
+          this.sortBy
         );
       } else {
         this.search = "";
@@ -58,7 +85,7 @@ export default {
 
     validation(string) {
       string = string.trim();
-      return string.length > 2;
+      return string.length >= 0;
     },
 
     clearError() {

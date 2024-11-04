@@ -24,6 +24,10 @@
             <font-awesome-icon :icon="['fas', 'circle-exclamation']" />
             <p>{{ el.open_issues_count }}</p>
           </div>
+          <div class="forks">
+            <font-awesome-icon :icon="['fas', 'code-fork']" />
+            <p>{{ el.forks_count }}</p>
+          </div>
         </div>
       </div>
       <div class="footer">
@@ -55,7 +59,7 @@ export default {
   justify-content: flex-start;
   width: 100%;
   width: 235px;
-  height: 400px;
+  height: 450px;
   border-radius: 20px;
 }
 
@@ -66,7 +70,7 @@ export default {
 .main {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
   padding: 10px;
   flex-grow: 1;
 }
@@ -130,7 +134,9 @@ export default {
   flex-grow: 2;
 }
 
-.stars {
+.stars,
+.issues,
+.forks {
   display: flex;
   align-items: center;
   padding-left: 20px;
@@ -138,13 +144,13 @@ export default {
   gap: 10px;
 }
 
-.issues {
+/* .issues {
   display: flex;
   align-items: center;
   padding-left: 20px;
   display: flex;
-  gap: 12px;
-}
+  gap: 10px;
+} */
 
 .button {
   color: rgb(83, 83, 83);
