@@ -155,7 +155,6 @@ export default {
         if (this.sortValue === "issues") {
           this.sortClainetSide();
         }
-
         const cacheKey = `${this.selectedOption}_${this.searchValue}_page_${pageToFetch}`;
         sessionStorage.setItem(cacheKey, JSON.stringify(this.repositories));
         this.applyPagination();
@@ -163,7 +162,38 @@ export default {
         this.showAlert(error.message, error.code);
       } finally {
         this.isLoading = false; // Imposta isLoading su false solo dopo la richiesta API
+
+        if (this.selectedOption === "users") {
+          console.log("USER FEATCH", this.userFetch());
+        }
       }
+    },
+
+    async userFetch() {
+      let results = []; // Corretto il nome da resaults a results
+      let users = [];
+      this.repositories.forEach((el) => users.push(el.name)); // users già contiene stringhe, non è necessario toString()
+
+      // Utilizza un ciclo for...of per gestire le promesse
+      for (const el of users) {
+        try {
+          const token = this.$githubToken;
+          const response = await axios.get(
+            `https://api.github.com/users/${el}`,
+            {
+              // Usare el direttamente
+              headers: {
+                Authorization: `token ${token}`,
+              },
+            }
+          );
+          results.push(response.data); // Aggiungi la risposta all'array results
+        } catch (error) {
+          console.error(`Errore nel fetch per ${el}:`, error); // Gestione dell'errore
+        }
+      }
+
+      return results; // Restituisci i risultati se necessario
     },
 
     checkCache(pageToFetch) {
