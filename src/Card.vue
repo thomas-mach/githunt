@@ -92,7 +92,7 @@ export default {
 }
 
 .avatar-container {
-  background: linear-gradient(to right, #007bff, #75b8ff);
+  background: linear-gradient(to right, #ca7df9, #564592);
   display: flex;
   justify-content: center;
   border-top-left-radius: 20px;
@@ -101,7 +101,7 @@ export default {
 }
 
 .avatar-container-user {
-  background: linear-gradient(to right, #00ff7b, #75ffb8);
+  background: linear-gradient(to right, #ca7df9, #564592);
 }
 
 .name {

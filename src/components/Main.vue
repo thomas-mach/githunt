@@ -1,24 +1,5 @@
 <template>
   <div class="container">
-    <div class="container">
-      <div v-show="pageNumbers.length > 1" class="row">
-        <button @click="prevPage" :disabled="page === 1">
-          <font-awesome-icon :icon="['fas', 'chevron-left']" />
-        </button>
-        <span v-for="pageNumber in pageNumbers" key="pageNumber">
-          <button
-            @click="goToPage(pageNumber)"
-            :disabled="page === pageNumber"
-            :class="{ active: page === pageNumber }"
-          >
-            {{ pageNumber }}
-          </button></span
-        >
-        <button @click="nextPage" :disabled="page === totalPages">
-          <font-awesome-icon :icon="['fas', 'chevron-right']" />
-        </button>
-      </div>
-    </div>
     <div class="search-bar-box">
       <span v-show="repositories.length" class="page-count-info"
         >Page {{ page }} of {{ totalPages }}</span
@@ -30,12 +11,32 @@
         </div>
       </div>
     </div>
+
     <div class="container-grid">
       <Card
         :repositories="repositories"
         :linkText="linkText"
         :typeOfCard="selectedOption"
       />
+    </div>
+  </div>
+  <div class="container">
+    <div v-show="pageNumbers.length > 1" class="row">
+      <button @click="prevPage" :disabled="page === 1">
+        <font-awesome-icon :icon="['fas', 'chevron-left']" />
+      </button>
+      <span v-for="pageNumber in pageNumbers" key="pageNumber">
+        <button
+          @click="goToPage(pageNumber)"
+          :disabled="page === pageNumber"
+          :class="{ active: page === pageNumber }"
+        >
+          {{ pageNumber }}
+        </button></span
+      >
+      <button @click="nextPage" :disabled="page === totalPages">
+        <font-awesome-icon :icon="['fas', 'chevron-right']" />
+      </button>
     </div>
   </div>
 </template>
@@ -382,9 +383,9 @@ button:hover {
 
 .loader {
   height: 4px;
-  width: 520px;
-  --c: no-repeat linear-gradient(#007bff 0 0);
-  background: var(--c), var(--c), #75b8ff;
+  width: 980px;
+  --c: no-repeat linear-gradient(#d7a0f9 0 0);
+  background: var(--c), var(--c), #9377f8;
   background-size: 60% 100%;
   animation: l16 3s infinite;
 }

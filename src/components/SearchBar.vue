@@ -1,104 +1,104 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="search">
-        <input
-          id="search"
-          type="text"
-          v-model="search"
-          :class="{ 'alert-input': showAlert, inner: showAlert }"
-          :placeholder="showAlert ? erroreMessage : 'Search...'"
-          @focus="clearError"
-          required
-        />
-        <!-- <select id="options" v-model="selectedOption">
-          <option value="repositories">Repositories</option>
-          <option value="users" selected>Users</option>
-        </select> -->
+  <div class="container-search">
+    <div class="search">
+      <input
+        id="search"
+        type="text"
+        v-model="search"
+        :class="{ 'alert-input': showAlert, inner: showAlert }"
+        :placeholder="
+          showAlert ? erroreMessage : 'Search for users or repositories...'
+        "
+        @focus="clearError"
+        required
+      />
 
-        <div class="dropdown-box">
-          <p
-            class="label-cards-for-page"
-            @mouseenter="showDropdownOption = true"
-            @mouseleave="showDropdownOption = false"
+      <div class="dropdown-box">
+        <p
+          class="label-cards-for-option"
+          @mouseenter="showDropdownOption = true"
+          @mouseleave="showDropdownOption = false"
+        >
+          {{ selectedOption }}
+        </p>
+        <ul
+          class="dropdown-option"
+          v-if="showDropdownOption"
+          @mouseenter="showDropdownOption = true"
+          @mouseleave="showDropdownOption = false"
+        >
+          <li
+            v-for="(option, i) in itemsForSelectedOption"
+            key="i"
+            @click="selectOption(option.value)"
+            class="dropdown-item"
           >
-            {{ selectedOption }}
-          </p>
-          <ul
-            class="dropdown-pages"
-            v-if="showDropdownOption"
-            @mouseenter="showDropdownOption = true"
-            @mouseleave="showDropdownOption = false"
-          >
-            <li
-              v-for="(option, i) in itemsForSelectedOption"
-              key="i"
-              @click="selectOption(option.value)"
-              class="dropdown-item"
-            >
-              {{ option.value }}
-            </li>
-          </ul>
-        </div>
-
-        <p class="label-sort-by">Sort By:</p>
-        <select id="sort" class="sort-by" v-model="sortBy">
-          <option v-if="selectedOption === 'repositories'" value="stars">
-            stars
-          </option>
-          <option v-if="selectedOption === 'repositories'" value="forks">
-            forks
-          </option>
-          <option v-if="selectedOption === 'repositories'" value="updated">
-            updated
-          </option>
-          <option v-if="selectedOption === 'repositories'" value="issues">
-            issues
-          </option>
-          <option v-if="selectedOption === 'users'" value="repositories">
-            repositories
-          </option>
-          <option v-if="selectedOption === 'users'" value="followers">
-            followers
-          </option>
-          <option v-if="selectedOption === 'users'" value="joined">
-            joined
-          </option>
-        </select>
-        <!-- <p class="label-cards-for-page">Cards/Page:</p>
-        <select id="pages" class="cards-for-page" v-model.number="itemsForPage">
-          <option :value="10">10</option>
-          <option :value="20">20</option>
-          <option :value="50">50</option>
-          <option :value="100">100</option>
-        </select> -->
-        <div class="dropdown-box">
-          <p
-            class="label-cards-for-page"
-            @mouseenter="showDropdownPages = true"
-            @mouseleave="showDropdownPages = false"
-          >
-            Cards/Page: {{ itemsForPage }}
-          </p>
-          <ul
-            class="dropdown-pages"
-            v-if="showDropdownPages"
-            @mouseenter="showDropdownPages = true"
-            @mouseleave="showDropdownPages = false"
-          >
-            <li
-              v-for="(option, i) in itemsForPageOptions"
-              key="i"
-              @click="selectItemsForPage(option.value)"
-              class="dropdown-item"
-            >
-              {{ option.label }}
-            </li>
-          </ul>
-        </div>
-
-        <button @click="sendDataToParent" id="search-button">Submit</button>
+            {{ option.value }}
+          </li>
+        </ul>
       </div>
+
+      <div class="dropdown-box">
+        <p
+          class="label-sort-by"
+          @mouseenter="showDropdownSortBy = true"
+          @mouseleave="showDropdownSortBy = false"
+        >
+          Sort by: {{ sortBy }}
+        </p>
+        <ul
+          class="dropdown-sort-by"
+          @mouseenter="showDropdownSortBy = true"
+          @mouseleave="showDropdownSortBy = false"
+          v-if="showDropdownSortBy"
+        >
+          <li
+            v-if="selectedOption === 'repositories'"
+            v-for="(option, i) in itemsForSortBy[0]"
+            :key="i"
+            @click="selectOptionForSortBy(option.value)"
+            class="dropdown-item"
+          >
+            {{ option.value }}
+          </li>
+          <li
+            v-else-if="selectedOption === 'users'"
+            v-for="(option, j) in itemsForSortBy[1]"
+            :key="j"
+            @click="selectOptionForSortBy(option.value)"
+            class="dropdown-item"
+          >
+            {{ option.value }}
+          </li>
+        </ul>
+      </div>
+
+      <div class="dropdown-box">
+        <p
+          class="label-cards-for-page"
+          @mouseenter="showDropdownPages = true"
+          @mouseleave="showDropdownPages = false"
+        >
+          Cards/Page: {{ itemsForPage }}
+        </p>
+        <ul
+          class="dropdown-pages"
+          v-if="showDropdownPages"
+          @mouseenter="showDropdownPages = true"
+          @mouseleave="showDropdownPages = false"
+        >
+          <li
+            v-for="(option, i) in itemsForPageOptions"
+            key="i"
+            @click="selectItemsForPage(option.value)"
+            class="dropdown-item"
+          >
+            {{ option.label }}
+          </li>
+        </ul>
+      </div>
+
+      <button @click="sendDataToParent" id="search-button">Search</button>
     </div>
   </div>
 </template>
@@ -110,13 +110,14 @@ export default {
   data() {
     return {
       selectedOption: "repositories",
+      sortBy: "stars",
       search: "",
       showAlert: false,
       showDropdownPages: false,
       showDropdownOption: false,
+      showDropdownSortBy: false,
       erroreMessage: "min 3 chars",
       itemsForPage: 10,
-      sortBy: "stars",
       itemsForPageOptions: [
         { value: 10, label: "10" },
         { value: 20, label: "20" },
@@ -124,6 +125,19 @@ export default {
         { value: 100, label: "100" },
       ],
       itemsForSelectedOption: [{ value: "repositories" }, { value: "users" }],
+      itemsForSortBy: [
+        [
+          { value: "stars" },
+          { value: "forks" },
+          { value: "updated" },
+          { value: "issues" },
+        ],
+        [
+          { value: "repositories" },
+          { value: "followers" },
+          { value: "joined" },
+        ],
+      ],
     };
   },
 
@@ -136,6 +150,11 @@ export default {
     selectOption(value) {
       this.selectedOption = value;
       this.showDropdownOption = false;
+    },
+
+    selectOptionForSortBy(value) {
+      this.sortBy = value;
+      this.showDropdownSortBy = false;
     },
 
     sendDataToParent() {
@@ -156,7 +175,7 @@ export default {
 
     validation(string) {
       string = string.trim();
-      return string.length >= 0;
+      return string.length >= 3;
     },
 
     clearError() {
@@ -176,65 +195,96 @@ export default {
 </script>
 
 <style scoped>
-.row {
-  justify-content: center;
-  width: 100%;
-}
-
 .search {
   display: flex;
-  align-items: center;
+  justify-content: center;
 }
 
 input {
-  height: 30px;
-  padding: 3px;
-  border: 1px solid lightgray;
-  border-top-left-radius: 3px;
-  border-bottom-left-radius: 3px;
-  border-right: none;
-  font-size: 14px;
+  padding-left: 10px;
+  width: 360px;
+  height: 50px;
+  border: 2px solid #ca7df9;
+  border-right: 2px solid #ca7df9;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  font-size: 16px;
 }
 
-.label-cards-for-page,
-.label-sort-by {
-  height: 30px;
-  padding: 3px 10px;
-  border: 1px solid lightgray;
-  border-right: none;
-  border-left: none;
-  line-height: 23px;
-  font-size: 14px;
+input:focus {
+  background-color: #f5e6ff;
+  color: #564592;
 }
 
-.cards-for-page,
-.sort-by {
-  border-left: none;
+input::placeholder {
+  color: #564592;
 }
 
 .dropdown-box {
   position: relative;
   cursor: pointer;
+  /* width: 200px; */
+}
+
+.label-cards-for-page,
+.label-cards-for-option,
+.label-sort-by {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  padding: 2px 0px;
+  border: 2px solid #ca7df9;
+  border-right: 3px solid #ca7df9;
+  border-left: none;
+  line-height: 23px;
+  font-size: 16px;
+  background-color: #564592;
+  color: white;
+  /* text-align: center; */
+}
+
+.label-cards-for-option {
   width: 150px;
 }
 
-.dropdown-pages {
-  width: 150px;
+.label-sort-by {
+  width: 230px;
+}
+
+.label-cards-for-page {
+  width: 170px;
+}
+
+.dropdown-pages,
+.dropdown-option,
+.dropdown-sort-by {
+  width: 100%;
   position: absolute;
   top: 10;
   right: 0;
   text-align: end;
+  background-color: white;
+  z-index: 100;
+}
+
+.dropdown-option {
+  text-align: start;
 }
 
 .dropdown-item {
-  line-height: 23px;
-  font-size: 14px;
-  border-bottom: 1px solid lightgray;
+  line-height: 30px;
+  font-size: 16px;
+  border-bottom: 2px solid #ca7df9;
   padding-right: 5px;
+  cursor: pointer;
+  text-align: center;
+  color: #564592;
 }
 
 .dropdown-item:hover {
-  background-color: lightgray;
+  color: #ca7df9;
+  cursor: pointer;
 }
 
 input:focus,
@@ -243,7 +293,7 @@ select:focus {
 }
 
 .alert-input {
-  border: 1px solid red;
+  border: 2px solid red;
 }
 
 .inner::placeholder {
@@ -259,17 +309,21 @@ select {
 }
 
 button {
-  height: 30px;
-  padding: 5px;
-  border: 1px solid lightgray;
+  height: 50px;
+  padding: 10px;
+  border: 2px solid #ca7df9;
   border-left: none;
-  border-top-right-radius: 3px;
-  border-bottom-right-radius: 3px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
+  letter-spacing: 2px;
+  font-weight: 800;
+  background-color: #edf67d;
+  color: #564592;
 }
 
 button:hover {
-  background-color: rgb(218, 218, 218);
+  background-color: #f9ffa6;
 }
 </style>
