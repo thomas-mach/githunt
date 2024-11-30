@@ -1,5 +1,7 @@
-# Vue 3 + Vite
+q: The search query. For example, to search for repositories containing PHP, you would use q=language:PHP.
+sort: Can be set to updated to sort by the most recently updated repositories.
+order: Use desc to get the most recent repositories at the top.
+per_page: The number of results per page (maximum is 100).
+page: To paginate through results.
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
-
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+https://api.github.com/search/repositories?q=language:PHP&sort=updated&order=desc&per_page=100&page=1

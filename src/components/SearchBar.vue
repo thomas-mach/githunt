@@ -22,7 +22,7 @@
           {{ selectedOption }}
         </p>
         <ul
-          class="dropdown-option"
+          class="dropdown-option fade-in"
           v-if="showDropdownOption"
           @mouseenter="showDropdownOption = true"
           @mouseleave="showDropdownOption = false"
@@ -31,7 +31,7 @@
             v-for="(option, i) in itemsForSelectedOption"
             key="i"
             @click="selectOption(option.value)"
-            class="dropdown-item"
+            class="dropdown-item fade-in"
           >
             {{ option.value }}
           </li>
@@ -195,17 +195,21 @@ export default {
 </script>
 
 <style scoped>
+.container-search {
+  user-select: none;
+}
 .search {
   display: flex;
   justify-content: center;
 }
 
 input {
+  background-color: white;
   padding-left: 10px;
   width: 360px;
   height: 50px;
-  border: 2px solid #ca7df9;
-  border-right: 2px solid #ca7df9;
+  border: 2px solid var(--secondary-color);
+  border-right: 2px solid var(--secondary-color);
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
   font-size: 16px;
@@ -213,17 +217,17 @@ input {
 
 input:focus {
   background-color: #f5e6ff;
-  color: #564592;
+  color: var(--primary-color);
 }
 
-input::placeholder {
-  color: #564592;
+input::placeholder,
+input:-webkit-autofill {
+  color: var(--primary-color);
 }
 
 .dropdown-box {
   position: relative;
   cursor: pointer;
-  /* width: 200px; */
 }
 
 .label-cards-for-page,
@@ -234,14 +238,13 @@ input::placeholder {
   justify-content: center;
   height: 50px;
   padding: 2px 0px;
-  border: 2px solid #ca7df9;
-  border-right: 3px solid #ca7df9;
+  border: 2px solid var(--secondary-color);
+  border-right: 3px solid var(--secondary-color);
   border-left: none;
   line-height: 23px;
   font-size: 16px;
-  background-color: #564592;
+  background-color: var(--primary-color);
   color: white;
-  /* text-align: center; */
 }
 
 .label-cards-for-option {
@@ -261,11 +264,12 @@ input::placeholder {
 .dropdown-sort-by {
   width: 100%;
   position: absolute;
-  top: 10;
+  top: 1;
   right: 0;
   text-align: end;
   background-color: white;
   z-index: 100;
+  margin: 0px 1px;
 }
 
 .dropdown-option {
@@ -275,15 +279,15 @@ input::placeholder {
 .dropdown-item {
   line-height: 30px;
   font-size: 16px;
-  border-bottom: 2px solid #ca7df9;
+  border-bottom: 2px solid var(--secondary-color);
+  color: var(--primary-color);
   padding-right: 5px;
   cursor: pointer;
   text-align: center;
-  color: #564592;
 }
 
 .dropdown-item:hover {
-  color: #ca7df9;
+  color: var(--secondary-color);
   cursor: pointer;
 }
 
@@ -311,7 +315,7 @@ select {
 button {
   height: 50px;
   padding: 10px;
-  border: 2px solid #ca7df9;
+  border: 2px solid var(--secondary-color);
   border-left: none;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
@@ -320,7 +324,7 @@ button {
   letter-spacing: 2px;
   font-weight: 800;
   background-color: #edf67d;
-  color: #564592;
+  color: var(--primary-color);
 }
 
 button:hover {

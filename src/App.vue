@@ -1,8 +1,8 @@
 <template>
   <div class="app">
-    <Header class="header" />
-    <Main class="main" />
-    <Footer class="footer" />
+    <!-- <Header class="header" /> -->
+    <Main />
+    <!-- <Footer class="footer" /> -->
   </div>
 </template>
 
@@ -21,12 +21,6 @@ export default {
 </script>
 
 <style scoped>
-.header,
-.main,
-.footer {
-  margin-top: 10px;
-}
-
 .app {
   display: flex;
   flex-direction: column;

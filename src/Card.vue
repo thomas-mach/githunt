@@ -6,7 +6,6 @@
           class="avatar-container"
           :class="{ 'avatar-container-user': typeOfCard === 'users' }"
         >
-          <!-- <font-awesome-icon :icon="['fab', 'github']" /> -->
           <img :src="el.avatar_url" alt="" class="avatar" />
         </div>
       </div>
@@ -30,6 +29,13 @@
           </div>
         </div>
       </div>
+      <button
+        class="details-btn"
+        v-if="typeOfCard === 'users'"
+        @click="detailsUrlEmit(el.url)"
+      >
+        View details <font-awesome-icon :icon="['fas', 'eye']" />
+      </button>
       <div class="footer">
         <a class="button" :href="el.html_url" target="_blank"
           >{{ linkText }}
@@ -47,6 +53,12 @@ export default {
     typeOfCard: String,
     linkText: String,
   },
+
+  methods: {
+    detailsUrlEmit(url) {
+      this.$emit("details-url-emit", url);
+    },
+  },
 };
 </script>
 
@@ -59,12 +71,12 @@ export default {
   justify-content: flex-start;
   width: 100%;
   width: 235px;
-  height: 450px;
+  height: 445px;
   border-radius: 20px;
 }
 
 .card-user {
-  height: 280px;
+  height: 330px;
 }
 
 .main {
@@ -81,7 +93,7 @@ export default {
   justify-content: center;
   align-items: center;
   height: 50px;
-  border-top: 2px solid white;
+  border-top: 2px solid var(--background-color);
 }
 
 .avatar {
@@ -92,7 +104,7 @@ export default {
 }
 
 .avatar-container {
-  background: linear-gradient(to right, #ca7df9, #564592);
+  background: linear-gradient(to right, #7f00ff, #e100ff);
   display: flex;
   justify-content: center;
   border-top-left-radius: 20px;
@@ -101,7 +113,7 @@ export default {
 }
 
 .avatar-container-user {
-  background: linear-gradient(to right, #ca7df9, #564592);
+  background: linear-gradient(to right, #7f00ff, #e100ff);
 }
 
 .name {
@@ -126,11 +138,13 @@ export default {
   text-overflow: ellipsis; /* Aggiunge i puntini di sospensione */
   font-size: 14px;
   font-weight: 400;
-  line-height: 1.4; /* Altezza della riga */
-  max-height: 4.2em; /* Limita l'altezza massima per 2 righe */
+  line-height: 22px; /* Altezza della riga */
+  max-height: 67px; /* Limita l'altezza massima per 2 righe */
 }
 
 .description-box {
+  display: flex;
+  /* align-items: center; */
   flex-grow: 2;
 }
 
@@ -161,6 +175,24 @@ export default {
   border-radius: 5px; /* Aggiunge angoli arrotondati */
   font-size: 16px; /* Dimensione del testo */
   cursor: pointer; /* Cambia il puntatore a mano */
+}
+
+.details-btn {
+  color: rgb(83, 83, 83);
+  font-weight: 500;
+  display: inline-block;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  height: 50px;
+  background: none;
+  border: none;
+  border-top: 2px solid var(--background-color);
+}
+
+.button:hover,
+.details-btn:hover {
+  color: var(--primary-color);
 }
 
 .box {

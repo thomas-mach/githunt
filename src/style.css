@@ -1,5 +1,12 @@
 /* RESET */
 
+:root {
+  --primary-color: #7f00ff;
+  --secondary-color: #e100ff;
+  /* --background-color: #343c4d; */
+  --background-color: #2f323a;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -14,7 +21,7 @@ ul {
 }
 
 body {
-  background-color: #fbfbfb;
+  background-color: var(--background-color);
 }
 
 .container {
@@ -23,4 +30,8 @@ body {
 
 .row {
   display: flex;
+}
+
+.no-scroll {
+  overflow: hidden;
 }

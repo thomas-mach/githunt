@@ -1,26 +1,41 @@
 <template>
-  <div class="container">
-    <div class="search-bar-box">
-      <span v-show="repositories.length" class="page-count-info"
-        >Page {{ page }} of {{ totalPages }}</span
-      >
-      <div class="wrapper">
-        <SearchBar @send-data-to-parent="reciveData" />
-        <div class="box-loader">
-          <div v-show="isLoading" class="loader"></div>
+  <Hero v-if="showHero" />
+  <DetailsCard
+    v-if="showDetails"
+    @close-details="closeDetails"
+    class="details-component"
+    :details="details"
+  />
+
+  <section class="search-section" :class="{ blur: showDetails === true }">
+    <div class="container">
+      <div class="search-bar-box">
+        <div class="page-cuont-info-wraper">
+          <span v-show="repositories.length" class="page-count-info"
+            >Page {{ page }} of {{ totalPages }}</span
+          >
+        </div>
+        <div class="wraper">
+          <SearchBar @send-data-to-parent="reciveData" />
+          <div class="box-loader">
+            <div v-show="isLoading" class="loader"></div>
+          </div>
         </div>
       </div>
     </div>
+  </section>
 
+  <div class="container" :class="{ blur: showDetails === true }">
     <div class="container-grid">
       <Card
         :repositories="repositories"
         :linkText="linkText"
         :typeOfCard="selectedOption"
+        @details-url-emit="detailsFetch"
       />
     </div>
   </div>
-  <div class="container">
+  <div class="container" :class="{ blur: showDetails === true }">
     <div v-show="pageNumbers.length > 1" class="row">
       <button @click="prevPage" :disabled="page === 1">
         <font-awesome-icon :icon="['fas', 'chevron-left']" />
@@ -39,6 +54,7 @@
       </button>
     </div>
   </div>
+  <div :class="{ overlay: showDetails === true }"></div>
 </template>
 
 <script>
@@ -46,14 +62,20 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import SearchBar from "./SearchBar.vue";
 import Card from "../Card.vue";
+import DetailsCard from "./DetailsCard.vue";
+import Hero from "./Hero.vue";
+
 export default {
   components: {
     Card,
     SearchBar,
+    DetailsCard,
+    Hero,
   },
   data() {
     return {
       repositories: [],
+      details: null,
       pageNumbers: [],
       selectedOption: "",
       searchValue: "",
@@ -64,6 +86,8 @@ export default {
       isLoading: false,
       totalResaults: null,
       itemsForPageValue: null,
+      showDetails: false,
+      showHero: true,
     };
   },
 
@@ -123,7 +147,7 @@ export default {
 
         this.totalResaults = response.data.total_count;
         this.checksIfResault(response.data.items);
-
+        console.log("RESPONSE DATA", response.data);
         this.repositories = response.data.items.map((item) => ({
           id: item.id,
           avatar_url:
@@ -151,50 +175,48 @@ export default {
             this.selectedOption === "repositories" ? item.language : null,
           forks_count:
             this.selectedOption === "repositories" ? item.forks_count : null,
+          url: this.selectedOption === "repositories" ? null : item.url,
         }));
+
+        console.log("Repositoreis Featch", this.repositories);
 
         if (this.sortValue === "issues") {
           this.sortClainetSide();
         }
         const cacheKey = `${this.selectedOption}_${this.searchValue}_page_${pageToFetch}`;
         sessionStorage.setItem(cacheKey, JSON.stringify(this.repositories));
+        // this.userFetch();
         this.applyPagination();
       } catch (error) {
         this.showAlert(error.message, error.code);
       } finally {
-        this.isLoading = false; // Imposta isLoading su false solo dopo la richiesta API
-
-        if (this.selectedOption === "users") {
-          console.log("USER FEATCH", this.userFetch());
-        }
+        this.isLoading = false;
+        this.showHero = false;
       }
     },
 
-    async userFetch() {
-      let results = []; // Corretto il nome da resaults a results
-      let users = [];
-      this.repositories.forEach((el) => users.push(el.name)); // users già contiene stringhe, non è necessario toString()
-
-      // Utilizza un ciclo for...of per gestire le promesse
-      for (const el of users) {
-        try {
-          const token = this.$githubToken;
-          const response = await axios.get(
-            `https://api.github.com/users/${el}`,
-            {
-              // Usare el direttamente
-              headers: {
-                Authorization: `token ${token}`,
-              },
-            }
-          );
-          results.push(response.data); // Aggiungi la risposta all'array results
-        } catch (error) {
-          console.error(`Errore nel fetch per ${el}:`, error); // Gestione dell'errore
-        }
+    async detailsFetch(url) {
+      this.details = null;
+      this.showDetails = true;
+      document.body.classList.add("no-scroll");
+      try {
+        console.log(url);
+        console.log("try caled");
+        const token = this.$githubToken;
+        console.log(token);
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: `token ${token}`,
+          },
+        });
+        this.details = response.data;
+        console.log("Card details", this.details);
+      } catch (error) {
+        console.error(
+          "Errore durante il fetch:",
+          error.response || error.message
+        );
       }
-
-      return results; // Restituisci i risultati se necessario
     },
 
     checkCache(pageToFetch) {
@@ -260,6 +282,8 @@ export default {
         // In questo caso non eseguiamo `fetch` se i dati sono in cache
         if (!this.isLoading) this.fetch(); // Condizione per chiamare fetch solo se non è già in esecuzione
       }
+
+      return allResults;
     },
 
     nextPage() {
@@ -267,6 +291,7 @@ export default {
         this.page++;
         console.log("nextPage");
         this.fetch();
+        this.scroll();
       }
     },
 
@@ -275,12 +300,14 @@ export default {
         this.page--;
         console.log("prevPage");
         this.fetch();
+        this.scroll();
       }
     },
 
     goToPage(pageNumber) {
       this.page = pageNumber;
       this.fetch();
+      this.scroll();
     },
 
     updatePageNumbers() {
@@ -317,13 +344,26 @@ export default {
         (a, b) => b.open_issues_count - a.open_issues_count
       );
     },
+
+    closeDetails() {
+      this.showDetails = false;
+      document.body.classList.remove("no-scroll");
+    },
+
+    scroll() {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: "smooth", // Scroll fluido
+      });
+    },
   },
 };
 </script>
 
 <style scoped>
 .container-grid {
-  margin-top: 25px;
+  margin-top: 120px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 20px; /* Spazio tra righe e colonne */
@@ -331,18 +371,25 @@ export default {
 }
 
 .row {
-  margin-top: 10px;
+  margin: 16px 0px;
   justify-content: center;
   align-items: center;
   cursor: pointer;
 }
+
+.search-section {
+  width: 100%;
+  background-color: var(--background-color);
+  position: fixed;
+}
+
 .search-bar-box {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.wrapper {
+.wraper {
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -350,42 +397,69 @@ export default {
 }
 
 .box-loader {
-  height: 4px;
+  height: 3px;
 }
 
 .page-count-info {
   font-size: 12px;
+  margin-left: 24px;
+  color: rgb(243, 243, 243);
+}
+
+.page-cuont-info-wraper {
+  height: 30px;
 }
 
 button {
-  width: 20px;
+  width: 24px;
   aspect-ratio: 1;
-  color: rgb(83, 83, 83);
-  font-size: 18px;
+  color: rgb(243, 243, 243);
+  font-size: 20px;
   cursor: pointer;
   border: none;
   margin: 6px;
-  padding: 0;
   overflow: visible;
   background: transparent;
 }
 
 button:hover {
-  color: #007bff;
-  font-size: 20px;
+  color: var(--secondary-color);
+  font-size: 24px;
+}
+
+.details-component {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
 }
 
 .active {
-  color: #007bff;
-  font-size: 20px;
+  color: var(--secondary-color);
+  font-size: 24px;
   text-decoration: underline;
 }
 
+.blur {
+  filter: blur(5px);
+  overflow: hidden;
+}
+
+.overlay {
+  position: fixed;
+  background: rgba(0, 0, 0, 0.7);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
 .loader {
-  height: 4px;
+  height: 3px;
   width: 980px;
-  --c: no-repeat linear-gradient(#d7a0f9 0 0);
-  background: var(--c), var(--c), #9377f8;
+  --c: no-repeat linear-gradient(var(--primary-color) 0 0);
+  background: var(--c), var(--c), var(--secondary-color);
   background-size: 60% 100%;
   animation: l16 3s infinite;
 }
