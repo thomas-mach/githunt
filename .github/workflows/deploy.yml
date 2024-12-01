@@ -31,4 +31,4 @@ jobs:
           folder: dist # La cartella che contiene il build finale dell'app (in Vite, di solito è 'dist')
 
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Usa il token GitHub segreto che GitHub fornisce automaticamente
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} # Usa il token GitHub segreto che GitHub fornisce automaticamente
