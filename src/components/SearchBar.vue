@@ -199,7 +199,7 @@ export default {
   user-select: none;
 }
 .search {
-  display: flex;
+  /* display: flex; */
   justify-content: center;
 }
 
