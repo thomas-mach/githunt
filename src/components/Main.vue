@@ -134,15 +134,15 @@ export default {
       this.isLoading = true; // Solo qui impostiamo isLoading su true
       this.errorMessage = "";
 
-      const url = `https://api.github.com/search/${this.selectedOption}?q=${this.searchValue}&sort=${this.sortValue}&order=desc&per_page=100&page=${pageToFetch}`;
+      const url = `http://localhost:3000/api/github-repos?selectedOption=${this.selectedOption}&searchValue=${this.searchValue}&sortValue=${this.sortValue}&page=${pageToFetch}`;
       this.isLoading = true;
       try {
         console.log("try caled");
         const token = this.$githubToken;
         const response = await axios.get(url, {
-          headers: {
-            Authorization: `token ${token}`,
-          },
+          // headers: {
+          //   Authorization: `token ${token}`,
+          // },
         });
 
         this.totalResaults = response.data.total_count;
@@ -196,18 +196,20 @@ export default {
     },
 
     async detailsFetch(url) {
+      console.log(url);
       this.details = null;
       this.showDetails = true;
       document.body.classList.add("no-scroll");
+      const url2 = `http://localhost:3000/api/github-user-details?user=${url}`;
       try {
         console.log(url);
         console.log("try caled");
         const token = this.$githubToken;
         console.log(token);
-        const response = await axios.get(url, {
-          headers: {
-            Authorization: `token ${token}`,
-          },
+        const response = await axios.get(url2, {
+          // headers: {
+          //   Authorization: `token ${token}`,
+          // },
         });
         this.details = response.data;
         console.log("Card details", this.details);
