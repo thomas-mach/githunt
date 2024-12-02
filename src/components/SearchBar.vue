@@ -7,13 +7,13 @@
         v-model="search"
         :class="{ 'alert-input': showAlert, inner: showAlert }"
         :placeholder="
-          showAlert ? erroreMessage : 'Search for users or repositories...'
+          showAlert ? erroreMessage : 'Search for users or repos...'
         "
         @focus="clearError"
         required
       />
 
-      <div class="dropdown-box">
+      <div class="dropdown-box-options">
         <p
           class="label-cards-for-option"
           @mouseenter="showDropdownOption = true"
@@ -38,7 +38,7 @@
         </ul>
       </div>
 
-      <div class="dropdown-box">
+      <div class="dropdown-box-sort-by">
         <p
           class="label-sort-by"
           @mouseenter="showDropdownSortBy = true"
@@ -73,13 +73,13 @@
         </ul>
       </div>
 
-      <div class="dropdown-box">
+      <div class="dropdown-box-cards-for-page">
         <p
           class="label-cards-for-page"
           @mouseenter="showDropdownPages = true"
           @mouseleave="showDropdownPages = false"
         >
-          Cards/Page: {{ itemsForPage }}
+          {{ itemsForPage }} per page
         </p>
         <ul
           class="dropdown-pages"
@@ -97,8 +97,9 @@
           </li>
         </ul>
       </div>
-
-      <button @click="sendDataToParent" id="search-button">Search</button>
+      <div class="button-box">
+        <button @click="sendDataToParent" id="search-button">Search</button>
+      </div>
     </div>
   </div>
 </template>
@@ -197,22 +198,30 @@ export default {
 <style scoped>
 .container-search {
   user-select: none;
+  width: 100%;
 }
 .search {
-  /* display: flex; */
-  justify-content: center;
+  /* display: flex;
+  justify-content: center; */
+  max-width: 1080px;
+  padding: 0 25px;
+  margin: 0px auto;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
 }
 
 input {
+  grid-column: span 4;
+  width: 100%;
+  padding: 0.6vw 0px;
   background-color: white;
-  padding-left: 10px;
-  width: 360px;
-  height: 50px;
+  padding-left: 0.7vw;
+  /* height: 50px; */
   border: 2px solid var(--secondary-color);
   border-right: 2px solid var(--secondary-color);
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
-  font-size: 16px;
+  font-size: min(1.5vw, 18px);
 }
 
 input:focus {
@@ -225,7 +234,12 @@ input:-webkit-autofill {
   color: var(--primary-color);
 }
 
-.dropdown-box {
+.dropdown-box-options,
+.dropdown-box-cards-for-page,
+.dropdown-box-sort-by,
+.button-box {
+  grid-column: span 2;
+  width: 100%;
   position: relative;
   cursor: pointer;
 }
@@ -233,31 +247,32 @@ input:-webkit-autofill {
 .label-cards-for-page,
 .label-cards-for-option,
 .label-sort-by {
-  display: flex;
+  /* display: flex;
   align-items: center;
-  justify-content: center;
-  height: 50px;
-  padding: 2px 0px;
+  justify-content: center; */
+  /* height: 50px; */
+  text-align: center;
   border: 2px solid var(--secondary-color);
   border-right: 3px solid var(--secondary-color);
   border-left: none;
-  line-height: 23px;
-  font-size: 16px;
+  /* line-height: 23px; */
+  padding: 0.6vw 0px;
+  font-size: min(1.5vw, 18px);
   background-color: var(--primary-color);
   color: white;
 }
 
-.label-cards-for-option {
+/* .label-cards-for-option {
   width: 150px;
-}
+} */
 
-.label-sort-by {
+/* .label-sort-by {
   width: 230px;
-}
+} */
 
-.label-cards-for-page {
+/* .label-cards-for-page {
   width: 170px;
-}
+} */
 
 .dropdown-pages,
 .dropdown-option,
@@ -277,11 +292,13 @@ input:-webkit-autofill {
 }
 
 .dropdown-item {
-  line-height: 30px;
-  font-size: 16px;
+  padding: 0.6vw 0px;
+  font-size: min(1.5vw, 18px);
+  /* line-height: 30px;
+  font-size: 16px; */
   border-bottom: 2px solid var(--secondary-color);
   color: var(--primary-color);
-  padding-right: 5px;
+  /* padding-right: 5px; */
   cursor: pointer;
   text-align: center;
 }
@@ -313,14 +330,15 @@ select {
 }
 
 button {
-  height: 50px;
-  padding: 10px;
+  /* height: 50px; */
+  width: 100%;
+  padding: 0.6vw 0.5vw;
   border: 2px solid var(--secondary-color);
   border-left: none;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: min(1.5vw, 18px);
   letter-spacing: 2px;
   font-weight: 800;
   background-color: #edf67d;

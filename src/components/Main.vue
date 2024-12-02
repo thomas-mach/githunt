@@ -459,7 +459,7 @@ button:hover {
 
 .loader {
   height: 3px;
-  width: 980px;
+  width: 500px;
   --c: no-repeat linear-gradient(var(--primary-color) 0 0);
   background: var(--c), var(--c), var(--secondary-color);
   background-size: 60% 100%;
