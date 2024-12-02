@@ -134,7 +134,7 @@ export default {
       this.isLoading = true; // Solo qui impostiamo isLoading su true
       this.errorMessage = "";
 
-      const url = `http://localhost:3000/api/github-repos?selectedOption=${this.selectedOption}&searchValue=${this.searchValue}&sortValue=${this.sortValue}&page=${pageToFetch}`;
+      const url = `https://githunt-server-a3ae0070cecf.herokuapp.com/api/github-repos?selectedOption=${this.selectedOption}&searchValue=${this.searchValue}&sortValue=${this.sortValue}&page=${pageToFetch}`;
       this.isLoading = true;
       try {
         console.log("try caled");
@@ -200,7 +200,7 @@ export default {
       this.details = null;
       this.showDetails = true;
       document.body.classList.add("no-scroll");
-      const url2 = `http://localhost:3000/api/github-user-details?user=${url}`;
+      const url2 = `https://githunt-server-a3ae0070cecf.herokuapp.com/api/github-user-details?user=${url}`;
       try {
         console.log(url);
         console.log("try caled");
