@@ -392,6 +392,8 @@ export default {
 }
 
 .wraper {
+  margin: 0 auto;
+  max-width: 1080px;
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -399,6 +401,8 @@ export default {
 }
 
 .box-loader {
+  padding: 0px 28px;
+  width: 100%;
   height: 3px;
 }
 
@@ -459,7 +463,7 @@ button:hover {
 
 .loader {
   height: 3px;
-  width: 500px;
+  width: 100%;
   --c: no-repeat linear-gradient(var(--primary-color) 0 0);
   background: var(--c), var(--c), var(--secondary-color);
   background-size: 60% 100%;
