@@ -79,7 +79,7 @@
           @mouseenter="showDropdownPages = true"
           @mouseleave="showDropdownPages = false"
         >
-          {{ itemsForPage }} per page
+          {{ itemsForPage }} x page
         </p>
         <ul
           class="dropdown-pages"
