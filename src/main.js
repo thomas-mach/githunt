@@ -20,6 +20,7 @@ import { faCodeFork } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 // Aggiungi le icone alla libreria
 library.add(
@@ -31,7 +32,8 @@ library.add(
   faGithub,
   faCodeFork,
   faEye,
-  faXmark
+  faXmark,
+  faMagnifyingGlass
 );
 const app = createApp(App);
 

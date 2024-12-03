@@ -97,7 +97,13 @@
           </li>
         </ul>
       </div>
-      <button @click="sendDataToParent" id="search-button">Search</button>
+      <button @click="sendDataToParent" id="search-button">
+        <font-awesome-icon
+          class="search-icon"
+          :icon="['fas', 'magnifying-glass']"
+        />
+        <span class="search-text">Search</span>
+      </button>
     </div>
   </div>
 </template>
@@ -366,6 +372,10 @@ button:hover {
   background-color: #f9ffa6;
 }
 
+.search-icon {
+  display: none;
+}
+
 /* MEDIA QUERY */
 
 /* Extra Small Devices (Mobile Phones) */
@@ -396,8 +406,8 @@ button:hover {
   .label-sort-by,
   input,
   button {
-    padding: 2vw 0px;
-    font-size: min(3vw, 18px);
+    padding: 3vw 0px;
+    font-size: min(4vw, 18px);
   }
   input {
     grid-column: span 10;
@@ -405,8 +415,12 @@ button:hover {
     padding-left: 10px;
   }
   button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     grid-column: span 2;
     grid-row: 1;
+    letter-spacing: 0.3vw;
   }
   .label-cards-for-option {
     border-left: 3px solid var(--secondary-color);
@@ -415,6 +429,14 @@ button:hover {
   .dropdown-item {
     padding: 0.8vw 0px;
     font-size: min(3vw, 18px);
+  }
+
+  .search-text {
+    display: none;
+  }
+  .search-icon {
+    display: block;
+    font-size: 5vw;
   }
 }
 /* Small Devices (Mobile Phones) */
@@ -441,8 +463,12 @@ button:hover {
   }
 
   button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     grid-column: span 2;
     grid-row: 1;
+    letter-spacing: 0.3vw;
   }
 
   .label-cards-for-page,
@@ -450,8 +476,8 @@ button:hover {
   .label-sort-by,
   input,
   button {
-    padding: 2vw 0px;
-    font-size: min(3vw, 18px);
+    padding: 3vw 0px;
+    font-size: min(4vw, 18px);
   }
 
   input {
@@ -467,6 +493,13 @@ button:hover {
   .dropdown-item {
     padding: 0.8vw 0px;
     font-size: min(3vw, 18px);
+  }
+  .search-text {
+    display: none;
+  }
+  .search-icon {
+    display: block;
+    font-size: 5vw;
   }
 }
 
