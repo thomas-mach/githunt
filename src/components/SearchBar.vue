@@ -44,7 +44,7 @@
           @mouseenter="showDropdownSortBy = true"
           @mouseleave="showDropdownSortBy = false"
         >
-          Sort by: {{ sortByLabel }}
+          by: {{ sortByLabel }}
         </p>
         <ul
           class="dropdown-sort-by"
@@ -202,9 +202,8 @@ export default {
   user-select: none;
   width: 100%;
 }
+
 .search {
-  /* display: flex;
-  justify-content: center; */
   max-width: 1080px;
   padding: 0 25px;
   margin: 0px auto;
@@ -365,5 +364,121 @@ button {
 
 button:hover {
   background-color: #f9ffa6;
+}
+
+/* MEDIA QUERY */
+
+/* Extra Small Devices (Mobile Phones) */
+@media (max-width: 575px) {
+  .search {
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: auto auto;
+    row-gap: 10px;
+  }
+
+  .dropdown-box-options {
+    grid-column: span 4;
+    grid-row: 2;
+  }
+
+  .dropdown-box-cards-for-page {
+    grid-column: span 4;
+    grid-row: 2;
+  }
+
+  .dropdown-box-sort-by {
+    grid-column: span 4;
+    grid-row: 2;
+  }
+
+  .label-cards-for-page,
+  .label-cards-for-option,
+  .label-sort-by,
+  input,
+  button {
+    padding: 2vw 0px;
+    font-size: min(3vw, 18px);
+  }
+  input {
+    grid-column: span 10;
+    grid-row: 1;
+    padding-left: 10px;
+  }
+  button {
+    grid-column: span 2;
+    grid-row: 1;
+  }
+  .label-cards-for-option {
+    border-left: 3px solid var(--secondary-color);
+  }
+
+  .dropdown-item {
+    padding: 0.8vw 0px;
+    font-size: min(3vw, 18px);
+  }
+}
+/* Small Devices (Mobile Phones) */
+@media (min-width: 576px) and (max-width: 767px) {
+  .search {
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: auto auto;
+    row-gap: 10px;
+  }
+
+  .dropdown-box-options {
+    grid-column: span 4;
+    grid-row: 2;
+  }
+
+  .dropdown-box-cards-for-page {
+    grid-column: span 4;
+    grid-row: 2;
+  }
+
+  .dropdown-box-sort-by {
+    grid-column: span 4;
+    grid-row: 2;
+  }
+
+  button {
+    grid-column: span 2;
+    grid-row: 1;
+  }
+
+  .label-cards-for-page,
+  .label-cards-for-option,
+  .label-sort-by,
+  input,
+  button {
+    padding: 2vw 0px;
+    font-size: min(3vw, 18px);
+  }
+
+  input {
+    grid-column: span 10;
+    grid-row: 1;
+    padding-left: 10px;
+  }
+
+  .label-cards-for-option {
+    border-left: 3px solid var(--secondary-color);
+  }
+
+  .dropdown-item {
+    padding: 0.8vw 0px;
+    font-size: min(3vw, 18px);
+  }
+}
+
+/* Medium Devices (Tablets) */
+@media (min-width: 768px) and (max-width: 991px) {
+}
+
+/* Large Devices (Desktops) */
+@media (min-width: 992px) and (max-width: 1199px) {
+}
+
+/* Extra Large Devices (Desktops) */
+@media (min-width: 1200px) {
 }
 </style>

@@ -480,4 +480,46 @@ button:hover {
     background-position: 250% 0, 250% 0;
   }
 }
+
+/* MEDIA QUERY */
+
+/* Extra Small Devices (Mobile Phones) */
+@media (max-width: 575px) {
+  .container-grid {
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 170px;
+  }
+  .wraper {
+    margin: 0;
+  }
+}
+
+/* Small Devices (Mobile Phones) */
+@media (min-width: 576px) and (max-width: 767px) {
+  .container-grid {
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 170px;
+  }
+  .wraper {
+    margin: 0;
+  }
+}
+
+/* Medium Devices (Tablets) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .container-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Large Devices (Desktops) */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .container-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Extra Large Devices (Desktops) */
+@media (min-width: 1200px) {
+}
 </style>
