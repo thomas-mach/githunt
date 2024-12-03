@@ -200,4 +200,38 @@ export default {
   flex-direction: column;
   gap: 10px;
 }
+
+/* MEDIA QUERY */
+
+/* Extra Small Devices (Mobile Phones) */
+@media (max-width: 575px) {
+  .card {
+    width: 200px;
+  }
+  button {
+    font-size: 14px;
+  }
+}
+
+/* Small Devices (Mobile Phones) */
+@media (min-width: 576px) and (max-width: 767px) {
+  .card {
+    width: 200px;
+  }
+  button {
+    font-size: 14px;
+  }
+}
+
+/* Medium Devices (Tablets) */
+@media (min-width: 768px) and (max-width: 991px) {
+}
+
+/* Large Devices (Desktops) */
+@media (min-width: 992px) and (max-width: 1199px) {
+}
+
+/* Extra Large Devices (Desktops) */
+@media (min-width: 1200px) {
+}
 </style>

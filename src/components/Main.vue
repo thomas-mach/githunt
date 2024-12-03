@@ -116,7 +116,7 @@ export default {
     async fetch() {
       //Effettua una richiesta API per ottenere i repository, gestisce il caching e il caricamento.
       if (this.isLoading) return;
-
+      this.scroll();
       let pageToFetch =
         Math.floor(((this.page - 1) * this.itemsForPageValue || 10) / 100) + 1;
       pageToFetch = Math.min(pageToFetch, 10); // Non superare la pagina 10
