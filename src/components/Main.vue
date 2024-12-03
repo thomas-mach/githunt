@@ -376,7 +376,7 @@ export default {
   margin: 16px 0px;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 .search-section {
@@ -430,7 +430,7 @@ button {
 
 button:hover {
   color: var(--secondary-color);
-  font-size: 24px;
+  font-size: 20px;
 }
 
 .details-component {
@@ -500,6 +500,9 @@ button:hover {
     width: 16px;
     font-size: 16px;
   }
+  .active {
+    font-size: 16px;
+  }
 }
 
 /* Small Devices (Mobile Phones) */
@@ -517,6 +520,10 @@ button:hover {
   }
   button {
     width: 18px;
+    font-size: 18px;
+  }
+
+  .active {
     font-size: 18px;
   }
 }

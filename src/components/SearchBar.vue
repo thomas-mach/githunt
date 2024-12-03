@@ -142,7 +142,7 @@ export default {
         ],
         [
           { value: "repositories", label: "repos" },
-          { value: "followers", label: "followers" },
+          { value: "followers", label: "follows" },
           { value: "joined", label: "joined" },
         ],
       ],
@@ -478,7 +478,7 @@ button:hover {
   }
 
   .label-cards-for-option {
-    border-left: 3px solid var(--primary-color);
+    border-left: 3px solid var(--secondary-color);
   }
 
   .dropdown-item {
@@ -511,6 +511,10 @@ button:hover {
   button {
     padding: 1.8vw 0px;
     font-size: min(1.8vw, 18px);
+  }
+
+  input {
+    padding-left: 10px;
   }
   .dropdown-item {
     white-space: nowrap;
