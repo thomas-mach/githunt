@@ -488,6 +488,7 @@ button:hover {
   .container-grid {
     grid-template-columns: repeat(2, 1fr);
     margin-top: 43vw;
+    gap: 10px;
   }
   .wraper {
     margin: 0;
@@ -510,6 +511,7 @@ button:hover {
   .container-grid {
     grid-template-columns: repeat(2, 1fr);
     margin-top: 35vw;
+    gap: 10px;
   }
   .wraper {
     margin: 0;

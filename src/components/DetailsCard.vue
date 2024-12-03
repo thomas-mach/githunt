@@ -48,7 +48,7 @@ export default {
 <style scoped>
 .card {
   width: 500px;
-  height: calc((400px * 16) / 9);
+  /* height: calc((400px * 16) / 9); */
   color: rgb(83, 83, 83);
   background-color: rgb(243, 243, 243);
   display: flex;
