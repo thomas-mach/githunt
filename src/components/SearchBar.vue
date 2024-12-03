@@ -19,7 +19,7 @@
           @mouseenter="showDropdownOption = true"
           @mouseleave="showDropdownOption = false"
         >
-          {{ selectedOption }}
+          {{ selectedOptionLabel }}
         </p>
         <ul
           class="dropdown-option fade-in"
@@ -30,10 +30,10 @@
           <li
             v-for="(option, i) in itemsForSelectedOption"
             key="i"
-            @click="selectOption(option.value)"
+            @click="selectOption(option.value, option.label)"
             class="dropdown-item fade-in"
           >
-            {{ option.value }}
+            {{ option.label }}
           </li>
         </ul>
       </div>
@@ -44,7 +44,7 @@
           @mouseenter="showDropdownSortBy = true"
           @mouseleave="showDropdownSortBy = false"
         >
-          Sort by: {{ sortBy }}
+          Sort by: {{ sortByLabel }}
         </p>
         <ul
           class="dropdown-sort-by"
@@ -56,19 +56,19 @@
             v-if="selectedOption === 'repositories'"
             v-for="(option, i) in itemsForSortBy[0]"
             :key="i"
-            @click="selectOptionForSortBy(option.value)"
+            @click="selectOptionForSortBy(option.value, option.label)"
             class="dropdown-item"
           >
-            {{ option.value }}
+            {{ option.label }}
           </li>
           <li
             v-else-if="selectedOption === 'users'"
             v-for="(option, j) in itemsForSortBy[1]"
             :key="j"
-            @click="selectOptionForSortBy(option.value)"
+            @click="selectOptionForSortBy(option.value, option.label)"
             class="dropdown-item"
           >
-            {{ option.value }}
+            {{ option.label }}
           </li>
         </ul>
       </div>
@@ -97,20 +97,18 @@
           </li>
         </ul>
       </div>
-      <div class="button-box">
-        <button @click="sendDataToParent" id="search-button">Search</button>
-      </div>
+      <button @click="sendDataToParent" id="search-button">Search</button>
     </div>
   </div>
 </template>
 
 <script>
-import { faLessThanEqual } from "@fortawesome/free-solid-svg-icons";
-
 export default {
   data() {
     return {
+      selectedOptionLabel: "repo",
       selectedOption: "repositories",
+      sortByLabel: "stars",
       sortBy: "stars",
       search: "",
       showAlert: false,
@@ -125,39 +123,43 @@ export default {
         { value: 50, label: "50" },
         { value: 100, label: "100" },
       ],
-      itemsForSelectedOption: [{ value: "repositories" }, { value: "users" }],
+      itemsForSelectedOption: [
+        { value: "repositories", label: "repo" },
+        { value: "users", label: "users" },
+      ],
       itemsForSortBy: [
         [
-          { value: "stars" },
-          { value: "forks" },
-          { value: "updated" },
-          { value: "issues" },
+          { value: "stars", label: "stars" },
+          { value: "forks", label: "forks" },
+          { value: "updated", label: "updated" },
+          { value: "issues", label: "issues" },
         ],
         [
-          { value: "repositories" },
-          { value: "followers" },
-          { value: "joined" },
+          { value: "repositories", label: "repos" },
+          { value: "followers", label: "followers" },
+          { value: "joined", label: "joined" },
         ],
       ],
     };
   },
 
   methods: {
+    selectOption(value, label) {
+      this.selectedOption = value;
+      this.selectedOptionLabel = label;
+      this.showDropdownOption = false;
+    },
+
+    selectOptionForSortBy(value, label) {
+      this.sortBy = value;
+      this.sortByLabel = label;
+      this.showDropdownSortBy = false;
+    },
+
     selectItemsForPage(value) {
       this.itemsForPage = value;
       this.showDropdownPages = false;
     },
-
-    selectOption(value) {
-      this.selectedOption = value;
-      this.showDropdownOption = false;
-    },
-
-    selectOptionForSortBy(value) {
-      this.sortBy = value;
-      this.showDropdownSortBy = false;
-    },
-
     sendDataToParent() {
       if (this.validation(this.search)) {
         this.showAlert = false;
@@ -187,8 +189,8 @@ export default {
     selectedOption: {
       handler() {
         this.selectedOption === "repositories"
-          ? (this.sortBy = "stars")
-          : (this.sortBy = "repositories");
+          ? (this.sortByLabel = "stars")
+          : (this.sortByLabel = "repos");
       },
     },
   },
@@ -237,11 +239,23 @@ input:-webkit-autofill {
 .dropdown-box-options,
 .dropdown-box-cards-for-page,
 .dropdown-box-sort-by,
-.button-box {
-  grid-column: span 2;
+button {
   width: 100%;
   position: relative;
   cursor: pointer;
+}
+
+.dropdown-box-options,
+.dropdown-box-cards-for-page {
+  grid-column: span 2;
+}
+
+.dropdown-box-sort-by {
+  grid-column: span 3;
+}
+
+button {
+  grid-column: span 1;
 }
 
 .label-cards-for-page,
@@ -292,7 +306,7 @@ input:-webkit-autofill {
 }
 
 .dropdown-item {
-  padding: 0.6vw 0px;
+  padding: 0.2vw 0px;
   font-size: min(1.5vw, 18px);
   /* line-height: 30px;
   font-size: 16px; */
@@ -301,6 +315,10 @@ input:-webkit-autofill {
   /* padding-right: 5px; */
   cursor: pointer;
   text-align: center;
+}
+
+.dropdown-item:last-child {
+  border-bottom: 4px solid rgb(3, 188, 3);
 }
 
 .dropdown-item:hover {
@@ -314,11 +332,11 @@ select:focus {
 }
 
 .alert-input {
-  border: 2px solid red;
+  border: 2px solid #ff00a9;
 }
 
 .inner::placeholder {
-  color: red;
+  color: #ff00a9;
 }
 
 select {
