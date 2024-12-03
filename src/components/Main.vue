@@ -368,8 +368,8 @@ export default {
   margin-top: 120px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 20px; /* Spazio tra righe e colonne */
-  justify-items: center; /* Centra gli elementi nel contenitore */
+  gap: 20px;
+  /* justify-items: center;  */
 }
 
 .row {
@@ -494,6 +494,11 @@ button:hover {
   }
   button:hover {
     color: rgb(243, 243, 243);
+    font-size: 16px;
+  }
+  button {
+    width: 16px;
+    font-size: 16px;
   }
 }
 
@@ -508,6 +513,11 @@ button:hover {
   }
   button:hover {
     color: rgb(243, 243, 243);
+    font-size: 18px;
+  }
+  button {
+    width: 18px;
+    font-size: 18px;
   }
 }
 
