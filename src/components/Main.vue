@@ -487,10 +487,13 @@ button:hover {
 @media (max-width: 575px) {
   .container-grid {
     grid-template-columns: repeat(2, 1fr);
-    margin-top: 170px;
+    margin-top: 43vw;
   }
   .wraper {
     margin: 0;
+  }
+  button:hover {
+    color: rgb(243, 243, 243);
   }
 }
 
@@ -498,10 +501,13 @@ button:hover {
 @media (min-width: 576px) and (max-width: 767px) {
   .container-grid {
     grid-template-columns: repeat(2, 1fr);
-    margin-top: 170px;
+    margin-top: 35vw;
   }
   .wraper {
     margin: 0;
+  }
+  button:hover {
+    color: rgb(243, 243, 243);
   }
 }
 

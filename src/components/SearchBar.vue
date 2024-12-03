@@ -44,7 +44,7 @@
           @mouseenter="showDropdownSortBy = true"
           @mouseleave="showDropdownSortBy = false"
         >
-          by: {{ sortByLabel }}
+          by:{{ sortByLabel }}
         </p>
         <ul
           class="dropdown-sort-by"
@@ -223,7 +223,6 @@ input {
   padding: 0.6vw 0px;
   background-color: white;
   padding-left: 0.7vw;
-  /* height: 50px; */
   border: 2px solid var(--secondary-color);
   border-right: 2px solid var(--secondary-color);
   border-top-left-radius: 10px;
@@ -266,32 +265,15 @@ button {
 .label-cards-for-page,
 .label-cards-for-option,
 .label-sort-by {
-  /* display: flex;
-  align-items: center;
-  justify-content: center; */
-  /* height: 50px; */
   text-align: center;
   border: 2px solid var(--secondary-color);
   border-right: 3px solid var(--secondary-color);
   border-left: none;
-  /* line-height: 23px; */
   padding: 0.6vw 0px;
   font-size: min(1.5vw, 18px);
   background-color: var(--primary-color);
   color: white;
 }
-
-/* .label-cards-for-option {
-  width: 150px;
-} */
-
-/* .label-sort-by {
-  width: 230px;
-} */
-
-/* .label-cards-for-page {
-  width: 170px;
-} */
 
 .dropdown-pages,
 .dropdown-option,
@@ -313,11 +295,8 @@ button {
 .dropdown-item {
   padding: 0.2vw 0px;
   font-size: min(1.5vw, 18px);
-  /* line-height: 30px;
-  font-size: 16px; */
   border-bottom: 2px solid var(--secondary-color);
   color: var(--primary-color);
-  /* padding-right: 5px; */
   cursor: pointer;
   text-align: center;
 }
@@ -427,8 +406,12 @@ button:hover {
   }
 
   .dropdown-item {
-    padding: 0.8vw 0px;
-    font-size: min(3vw, 18px);
+    padding: 1vw 0px;
+    font-size: min(4vw, 18px);
+  }
+
+  .label-sort-by {
+    white-space: nowrap;
   }
 
   .search-text {
@@ -437,6 +420,14 @@ button:hover {
   .search-icon {
     display: block;
     font-size: 5vw;
+  }
+
+  .dropdown-item:hover {
+    color: var(--secondary-color);
+  }
+
+  button:hover {
+    background-color: #edf67d;
   }
 }
 /* Small Devices (Mobile Phones) */
@@ -487,12 +478,13 @@ button:hover {
   }
 
   .label-cards-for-option {
-    border-left: 3px solid var(--secondary-color);
+    border-left: 3px solid var(--primary-color);
   }
 
   .dropdown-item {
-    padding: 0.8vw 0px;
-    font-size: min(3vw, 18px);
+    white-space: nowrap;
+    padding: 1vw 0px;
+    font-size: min(4vw, 18px);
   }
   .search-text {
     display: none;
@@ -501,10 +493,30 @@ button:hover {
     display: block;
     font-size: 5vw;
   }
+  .dropdown-item:hover {
+    color: var(--primary-color);
+  }
+
+  button:hover {
+    background-color: #edf67d;
+  }
 }
 
 /* Medium Devices (Tablets) */
 @media (min-width: 768px) and (max-width: 991px) {
+  .label-cards-for-page,
+  .label-cards-for-option,
+  .label-sort-by,
+  input,
+  button {
+    padding: 1.8vw 0px;
+    font-size: min(1.8vw, 18px);
+  }
+  .dropdown-item {
+    white-space: nowrap;
+    padding: 1vw 0px;
+    font-size: min(1.8vw, 18px);
+  }
 }
 
 /* Large Devices (Desktops) */

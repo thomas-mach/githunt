@@ -206,7 +206,7 @@ export default {
 /* Extra Small Devices (Mobile Phones) */
 @media (max-width: 575px) {
   .card {
-    width: 200px;
+    width: 45vw;
   }
   button {
     font-size: 14px;
@@ -216,7 +216,7 @@ export default {
 /* Small Devices (Mobile Phones) */
 @media (min-width: 576px) and (max-width: 767px) {
   .card {
-    width: 200px;
+    width: 45vw;
   }
   button {
     font-size: 14px;

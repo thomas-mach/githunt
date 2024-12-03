@@ -124,14 +124,14 @@ span {
 /* Extra Small Devices (Mobile Phones) */
 @media (max-width: 575px) {
   .card {
-    width: 400px;
+    width: 90vw;
   }
 }
 
 /* Small Devices (Mobile Phones) */
 @media (min-width: 576px) and (max-width: 767px) {
   .card {
-    width: 400px;
+    width: 90vw;
   }
 }
 
