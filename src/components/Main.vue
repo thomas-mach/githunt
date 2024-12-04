@@ -1,5 +1,6 @@
 <template>
   <Hero v-if="showHero" />
+
   <DetailsCard
     v-if="showDetails"
     @close-details="closeDetails"
@@ -7,6 +8,7 @@
     :details="details"
   />
 
+  <!-- Search Bar -->
   <section class="search-section" :class="{ blur: showDetails === true }">
     <div class="container">
       <div class="search-bar-box">
@@ -25,6 +27,7 @@
     </div>
   </section>
 
+  <!-- Card -->
   <div class="container" :class="{ blur: showDetails === true }">
     <div class="container-grid">
       <Card
@@ -35,6 +38,8 @@
       />
     </div>
   </div>
+
+  <!-- Pagination -->
   <div class="container" :class="{ blur: showDetails === true }">
     <div v-show="pageNumbers.length > 1" class="row">
       <button @click="prevPage" :disabled="page === 1">
@@ -58,92 +63,80 @@
 </template>
 
 <script>
-import Swal from "sweetalert2";
 import axios from "axios";
-import SearchBar from "./SearchBar.vue";
-import Card from "../Card.vue";
-import DetailsCard from "./DetailsCard.vue";
+import Swal from "sweetalert2";
 import Hero from "./Hero.vue";
+import SearchBar from "./SearchBar.vue";
+import Card from "./Card.vue";
+import DetailsCard from "./DetailsCard.vue";
 
 export default {
   components: {
-    Card,
-    SearchBar,
-    DetailsCard,
     Hero,
+    SearchBar,
+    Card,
+    DetailsCard,
   },
+
   data() {
     return {
       repositories: [],
-      details: null,
       pageNumbers: [],
+      isLoading: false,
+      showDetails: false,
+      showHero: true,
+      details: null,
+      totalResaults: null,
+      itemsForPageValue: null,
       selectedOption: "",
       searchValue: "",
       sortValue: "",
       linkText: "",
       page: 1,
       totalPages: 1,
-      isLoading: false,
-      totalResaults: null,
-      itemsForPageValue: null,
-      showDetails: false,
-      showHero: true,
     };
   },
 
   methods: {
+    //Recive data from SearchBar component
     reciveData(option, search, items, sort) {
       sessionStorage.clear();
       this.selectedOption = option;
       this.searchValue = search;
       this.itemsForPageValue = items;
       this.sortValue = sort;
-      console.log("sort by:", this.sortValue);
-
       this.page = 1;
       this.totalPages = 1;
-
       this.selectedOption === "repositories"
         ? (this.linkText = "Go to repo")
         : (this.linkText = "Go to profile");
-
       this.fetch();
       this.updatePageNumbers();
-
-      console.log(option, search, items);
     },
 
     async fetch() {
-      //Effettua una richiesta API per ottenere i repository, gestisce il caching e il caricamento.
       if (this.isLoading) return;
       this.scroll();
+
       let pageToFetch =
         Math.floor(((this.page - 1) * this.itemsForPageValue || 10) / 100) + 1;
-      pageToFetch = Math.min(pageToFetch, 10); // Non superare la pagina 10
+      pageToFetch = Math.min(pageToFetch, 10);
 
-      // Controlla se c'è cache disponibile
       const cachedData = this.checkCache(pageToFetch);
       if (cachedData) {
-        console.log("Using cached data");
         this.repositories = cachedData;
-        this.applyPagination(); // Applica la paginazione direttamente
-        return; // Esci senza fare la richiesta API
+        this.applyPagination();
+        return;
       }
 
-      // Se non c'è cache, procedi con la richiesta API
-      this.isLoading = true; // Solo qui impostiamo isLoading su true
+      this.isLoading = true;
       this.errorMessage = "";
 
       const url = `https://githunt-server-a3ae0070cecf.herokuapp.com/api/github-repos?selectedOption=${this.selectedOption}&searchValue=${this.searchValue}&sortValue=${this.sortValue}&page=${pageToFetch}`;
-      this.isLoading = true;
+
       try {
         console.log("try caled");
-        const token = this.$githubToken;
-        const response = await axios.get(url, {
-          // headers: {
-          //   Authorization: `token ${token}`,
-          // },
-        });
+        const response = await axios.get(url, {});
 
         this.totalResaults = response.data.total_count;
         this.checksIfResault(response.data.items);
@@ -178,14 +171,11 @@ export default {
           url: this.selectedOption === "repositories" ? null : item.url,
         }));
 
-        console.log("Repositoreis Featch", this.repositories);
-
         if (this.sortValue === "issues") {
           this.sortClainetSide();
         }
         const cacheKey = `${this.selectedOption}_${this.searchValue}_page_${pageToFetch}`;
         sessionStorage.setItem(cacheKey, JSON.stringify(this.repositories));
-        // this.userFetch();
         this.applyPagination();
       } catch (error) {
         this.showAlert(error.message, error.code);
@@ -196,37 +186,20 @@ export default {
     },
 
     async detailsFetch(url) {
-      console.log(url);
       this.details = null;
       this.showDetails = true;
       document.body.classList.add("no-scroll");
       const url2 = `https://githunt-server-a3ae0070cecf.herokuapp.com/api/github-user-details?user=${url}`;
       try {
-        console.log(url);
-        console.log("try caled");
-        const token = this.$githubToken;
-        console.log(token);
-        const response = await axios.get(url2, {
-          // headers: {
-          //   Authorization: `token ${token}`,
-          // },
-        });
+        const response = await axios.get(url2, {});
         this.details = response.data;
         console.log("Card details", this.details);
       } catch (error) {
-        console.error(
-          "Errore durante il fetch:",
-          error.response || error.message
-        );
+        this.showAlert(error.message, error.code);
       }
     },
 
     checkCache(pageToFetch) {
-      //Controlla se i dati richiesti sono già memorizzati in sessionStorage.
-      console.log(
-        `Checking cache for: ${this.selectedOption}_${this.searchValue}_page_${pageToFetch}`
-      );
-
       const cacheKey = `${this.selectedOption}_${this.searchValue}_page_${pageToFetch}`;
       console.log("Page to fetch: ", pageToFetch);
       console.log("SessionStorage:", sessionStorage);
@@ -239,7 +212,6 @@ export default {
     },
 
     checksIfResault(item) {
-      // Controlla se sono stati trovati risultati e mostra un messaggio di avviso se non ce ne sono.
       if (!item.length) {
         const message = `Nothing found for "${this.searchValue}"`;
         this.showAlert(message);
@@ -247,51 +219,32 @@ export default {
     },
 
     applyPagination() {
-      console.log("applyPagination called");
-      //Calcola le pagine totali e applica la paginazione.
-      console.log("PAGE", this.page);
-
-      // Usa il numero reale di risultati per il calcolo delle pagine
       const totalItems = this.totalResaults > 1000 ? 1000 : this.totalResaults;
-
       this.totalPages = Math.ceil(totalItems / this.itemsForPageValue);
-
-      console.log("Total Pages", this.totalPages);
-      console.log("Total Resaults", this.totalResaults);
-
       let allResults = [];
-
       const totalPagesToCheck = Math.ceil(
         (this.page * this.itemsForPageValue) / 100
       );
-
       for (let i = 1; i <= totalPagesToCheck; i++) {
         const cacheKey = `${this.selectedOption}_${this.searchValue}_page_${i}`;
         const cachedData = sessionStorage.getItem(cacheKey);
-
         if (cachedData) {
           allResults = allResults.concat(JSON.parse(cachedData));
         }
       }
-
-      console.log("allResults:", allResults);
       if (allResults.length >= this.page * this.itemsForPageValue) {
         const start = (this.page - 1) * this.itemsForPageValue;
         const end = start + this.itemsForPageValue;
         this.repositories = allResults.slice(start, end);
         this.updatePageNumbers();
       } else {
-        // In questo caso non eseguiamo `fetch` se i dati sono in cache
-        if (!this.isLoading) this.fetch(); // Condizione per chiamare fetch solo se non è già in esecuzione
+        if (!this.isLoading) this.fetch();
       }
-
-      return allResults;
     },
 
     nextPage() {
       if (this.page < this.totalPages) {
         this.page++;
-        console.log("nextPage");
         this.fetch();
         this.scroll();
       }
@@ -300,7 +253,6 @@ export default {
     prevPage() {
       if (this.page > 0) {
         this.page--;
-        console.log("prevPage");
         this.fetch();
         this.scroll();
       }
@@ -313,24 +265,17 @@ export default {
     },
 
     updatePageNumbers() {
-      //Aggiorna la lista dei numeri di pagina visualizzati.
-
       let pageRange = 10;
-
       this.totalPages < 10 ? (pageRange = this.totalPages) : (pageRange = 10);
       let start = Math.max(1, this.page - Math.floor(pageRange));
       if (this.totalPages > 10) {
         start = Math.max(1, this.page - Math.floor(pageRange / 2));
       }
-
       const end = Math.min(this.totalPages, start + pageRange - 1);
-
       this.pageNumbers = [];
-
       for (let i = start; i <= end; i++) {
         this.pageNumbers.push(i);
       }
-      console.log("array con page numbers", this.pageNumbers);
     },
 
     showAlert(title, code) {
@@ -356,7 +301,7 @@ export default {
       window.scroll({
         top: 0,
         left: 0,
-        behavior: "smooth", // Scroll fluido
+        behavior: "smooth",
       });
     },
   },
@@ -369,14 +314,12 @@ export default {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 20px;
-  /* justify-items: center;  */
 }
 
 .row {
   margin: 16px 0px;
   justify-content: center;
   align-items: center;
-  /* cursor: pointer; */
 }
 
 .search-section {

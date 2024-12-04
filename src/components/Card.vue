@@ -71,7 +71,7 @@ export default {
   justify-content: flex-start;
   width: 100%;
   width: 235px;
-  height: 445px;
+  height: 47vh;
   border-radius: 20px;
 }
 
@@ -100,7 +100,7 @@ export default {
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5); /* Aggiunta dell'ombra */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .avatar-container {
@@ -113,15 +113,13 @@ export default {
 }
 
 .avatar-container-user {
-  background: linear-gradient(to right, #7f00ff, #e100ff);
+  background: linear-gradient(to right, #7f00ff, #2ebf91);
 }
 
 .name {
-  /* word-wrap: break-word; /* Permette al testo di andare a capo se necessario */
-  /* overflow-wrap: break-word; */
-  display: -webkit-box; /* Necessario per -webkit-line-clamp */
-  -webkit-box-orient: vertical; /* Imposta l'orientamento verticale */
-  -webkit-line-clamp: 2; /* Limita a 3 righe */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 16px;
@@ -144,7 +142,6 @@ export default {
 
 .description-box {
   display: flex;
-  /* align-items: center; */
   flex-grow: 2;
 }
 
@@ -157,14 +154,6 @@ export default {
   display: flex;
   gap: 10px;
 }
-
-/* .issues {
-  display: flex;
-  align-items: center;
-  padding-left: 20px;
-  display: flex;
-  gap: 10px;
-} */
 
 .button {
   color: rgb(83, 83, 83);

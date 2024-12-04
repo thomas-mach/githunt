@@ -166,6 +166,7 @@ export default {
       this.itemsForPage = value;
       this.showDropdownPages = false;
     },
+
     sendDataToParent() {
       if (this.validation(this.search)) {
         this.showAlert = false;
@@ -332,7 +333,6 @@ select {
 }
 
 button {
-  /* height: 50px; */
   width: 100%;
   padding: 0.6vw 0.5vw;
   border: 2px solid var(--secondary-color);

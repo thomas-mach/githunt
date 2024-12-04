@@ -6,7 +6,6 @@
       </div>
     </div>
     <div class="main">
-      <!-- <p><span>Login:</span> {{ details.login }}</p> -->
       <div class="name-location">
         <p class="name">{{ details.name }}</p>
         <p class="location">{{ details.location }}</p>
@@ -48,7 +47,7 @@ export default {
 <style scoped>
 .card {
   width: 500px;
-  /* height: calc((400px * 16) / 9); */
+  /* height: calc((500px * 16) / 9); */
   color: rgb(83, 83, 83);
   background-color: rgb(243, 243, 243);
   display: flex;
@@ -62,11 +61,11 @@ export default {
   width: 130px;
   height: 130px;
   border-radius: 50%;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5); /* Aggiunta dell'ombra */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .avatar-container {
-  background: linear-gradient(to right, #7f00ff, #e100ff);
+  background: linear-gradient(to right, #c6ffdd, #fbd786, #f7797d);
   display: flex;
   justify-content: center;
   border-top-left-radius: 20px;
@@ -125,6 +124,7 @@ span {
 @media (max-width: 575px) {
   .card {
     width: 90vw;
+    height: 80vh;
   }
 }
 
@@ -132,6 +132,7 @@ span {
 @media (min-width: 576px) and (max-width: 767px) {
   .card {
     width: 90vw;
+    height: 80vh;
   }
 }
 

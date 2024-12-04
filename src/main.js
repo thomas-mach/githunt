@@ -3,9 +3,9 @@ import "./style.css";
 import App from "./App.vue";
 import "@fontsource/comfortaa";
 import "@fontsource/roboto-mono/100.css";
-import "@fontsource/roboto-mono/400.css"; // Regular 400
-import "@fontsource/roboto-mono/500.css"; // Medium 500
-import "@fontsource/roboto-mono/700.css"; // Bold 700
+import "@fontsource/roboto-mono/400.css";
+import "@fontsource/roboto-mono/500.css";
+import "@fontsource/roboto-mono/700.css";
 import "typeface-cutive-mono";
 import "typeface-poppins";
 
@@ -22,7 +22,6 @@ import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
-// Aggiungi le icone alla libreria
 library.add(
   faStar,
   faCircleExclamation,

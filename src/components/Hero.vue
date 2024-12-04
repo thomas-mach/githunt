@@ -5,8 +5,6 @@
       <h1>it<span>Hunt</span></h1>
     </div>
     <h2>Discover repositories and users in one click</h2>
-
-    <!-- <div class="title-box"></div> -->
   </div>
 </template>
 
@@ -31,12 +29,6 @@ export default {};
   align-items: center;
   color: #f5e6ff;
 }
-
-/* .hero-box {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-} */
 
 .github-icon,
 h1 {
