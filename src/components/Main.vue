@@ -373,7 +373,7 @@ button {
 
 button:hover {
   color: var(--secondary-color);
-  font-size: 20px;
+  font-size: 24px;
 }
 
 .details-component {
