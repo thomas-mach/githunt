@@ -71,7 +71,7 @@ export default {
   justify-content: flex-start;
   width: 100%;
   width: 235px;
-  height: 47vh;
+  height: 450px;
   border-radius: 20px;
 }
 

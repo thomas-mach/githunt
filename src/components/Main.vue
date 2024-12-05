@@ -135,12 +135,9 @@ export default {
       const url = `https://githunt-server-a3ae0070cecf.herokuapp.com/api/github-repos?selectedOption=${this.selectedOption}&searchValue=${this.searchValue}&sortValue=${this.sortValue}&page=${pageToFetch}`;
 
       try {
-        console.log("try caled");
         const response = await axios.get(url, {});
-
         this.totalResaults = response.data.total_count;
         this.checksIfResault(response.data.items);
-        console.log("RESPONSE DATA", response.data);
         this.repositories = response.data.items.map((item) => ({
           id: item.id,
           avatar_url:
@@ -193,7 +190,6 @@ export default {
       try {
         const response = await axios.get(url2, {});
         this.details = response.data;
-        console.log("Card details", this.details);
       } catch (error) {
         this.showAlert(error.message, error.code);
       }
@@ -201,9 +197,6 @@ export default {
 
     checkCache(pageToFetch) {
       const cacheKey = `${this.selectedOption}_${this.searchValue}_page_${pageToFetch}`;
-      console.log("Page to fetch: ", pageToFetch);
-      console.log("SessionStorage:", sessionStorage);
-
       const cachedData = sessionStorage.getItem(cacheKey);
       if (cachedData) {
         return (this.repositories = JSON.parse(cachedData));
