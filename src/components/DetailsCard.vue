@@ -18,8 +18,14 @@
         <p><span>Following:</span> {{ details.following }}</p>
         <p><span>Company:</span> {{ details.company }}</p>
         <p><span>Public repos:</span> {{ details.public_repos }}</p>
-        <p><span>Created at:</span> {{ details.created_at }}</p>
-        <p><span>Updated at:</span> {{ details.updated_at }}</p>
+        <p>
+          <span>Created at:</span>
+          {{ new Date(details.created_at).toLocaleDateString() }}
+        </p>
+        <p>
+          <span>Updated at:</span>
+          {{ new Date(details.updated_at).toLocaleDateString() }}
+        </p>
       </div>
     </div>
     <div class="footer"></div>
