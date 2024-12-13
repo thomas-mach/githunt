@@ -186,7 +186,7 @@ export default {
       this.details = null;
       this.showDetails = true;
       document.body.classList.add("no-scroll");
-      const url2 = `https://githunt-server-a3ae0070cecf.herokuapp.com/api/github-user-details?user=${url}`;
+      const url2 = `https://githunt-server-2f77ded310be.herokuapp.com/api/github-user-details?user=${url}`;
       try {
         const response = await axios.get(url2, {});
         this.details = response.data;
