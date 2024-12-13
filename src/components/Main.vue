@@ -175,7 +175,15 @@ export default {
         sessionStorage.setItem(cacheKey, JSON.stringify(this.repositories));
         this.applyPagination();
       } catch (error) {
-        this.showAlert(error.message, error.code);
+        const statusCode = error.response.status;
+        if (statusCode === 429) {
+          this.showAlert(
+            "Rate Limit Exceeded",
+            "Too many requests. Please try again later."
+          );
+        } else {
+          this.showAlert(error.message, error.code);
+        }
       } finally {
         this.isLoading = false;
         this.showHero = false;
@@ -191,7 +199,15 @@ export default {
         const response = await axios.get(url2, {});
         this.details = response.data;
       } catch (error) {
-        this.showAlert(error.message, error.code);
+        const statusCode = error.response.status;
+        if (statusCode === 429) {
+          this.showAlert(
+            "Rate Limit Exceeded",
+            "Too many requests. Please try again later."
+          );
+        } else {
+          this.showAlert(error.message, error.code);
+        }
       }
     },
 
@@ -276,6 +292,10 @@ export default {
         icon: "warning",
         title: title,
         text: code,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.showDetails = false;
+        }
       });
     },
 
