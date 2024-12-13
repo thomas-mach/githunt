@@ -37,6 +37,10 @@
 
 <script>
 export default {
+  data() {
+    return {};
+  },
+
   props: {
     details: Object,
   },

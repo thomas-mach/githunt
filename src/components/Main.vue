@@ -132,7 +132,7 @@ export default {
       this.isLoading = true;
       this.errorMessage = "";
 
-      const url = `https://githunt-server-a3ae0070cecf.herokuapp.com/api/github-repos?selectedOption=${this.selectedOption}&searchValue=${this.searchValue}&sortValue=${this.sortValue}&page=${pageToFetch}`;
+      const url = `https://githunt-server-2f77ded310be.herokuapp.com/api/github-repos?selectedOption=${this.selectedOption}&searchValue=${this.searchValue}&sortValue=${this.sortValue}&page=${pageToFetch}`;
 
       try {
         const response = await axios.get(url, {});
